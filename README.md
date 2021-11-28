@@ -12,6 +12,18 @@
 
 ## https://mirotalk.herokuapp.com/
 
+## Demo
+
+-   `Open` https://mirotalk.up.railway.app/newcall `or` https://mirotalk.herokuapp.com/newcall
+-   `Pick` your personal Room name and `Join To Room`
+-   `Allow` to use the camera and microphone
+-   `Share` the Room URL and `Wait` someone to join for video conference
+
+## Room join
+
+-   You can also `join` directly to your `room` by going to https://mirotalk.up.railway.app/join/your-room-name-goes-here `or` https://mirotalk.herokuapp.com/join/your-room-name-goes-here
+
+
 ---
 
 ## Docker
