@@ -24,8 +24,6 @@
 -   Вы также можете напрямую `присоединиться` к своей `комнате`, введя ссылку https://mirotalk.up.railway.app/join/имя-вашей-комнаты `или` https://mirotalk.herokuapp.com/join/имя-вашей-комнаты
 
 
----
-
 ## Docker
 
 -   Установка https://docs.docker.com/compose/install/
@@ -42,5 +40,3 @@ $ docker-compose down
 ```
 
 -   откройте http://localhost:3000 в браузере
-
----
