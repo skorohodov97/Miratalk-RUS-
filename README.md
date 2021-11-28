@@ -12,23 +12,23 @@
 
 ## https://mirotalk.herokuapp.com/
 
-## Demo
+## Демо
 
--   `Open` https://mirotalk.up.railway.app/newcall `or` https://mirotalk.herokuapp.com/newcall
--   `Pick` your personal Room name and `Join To Room`
--   `Allow` to use the camera and microphone
--   `Share` the Room URL and `Wait` someone to join for video conference
+-   `Откройте` https://mirotalk.up.railway.app/newcall `или` https://mirotalk.herokuapp.com/newcall
+-   `Выберите` индвидуальное название комнаты и `Присоединяйтесь к комнате`
+-   `Разрешите` доступ к камере и микрофону
+-   `Поделитесь` Ссылкой на комнату и `Подождите`, пока кто-нибудь не присоединится к конференции
 
-## Room join
+## Присоединение к комнате
 
--   You can also `join` directly to your `room` by going to https://mirotalk.up.railway.app/join/your-room-name-goes-here `or` https://mirotalk.herokuapp.com/join/your-room-name-goes-here
+-   Вы также можете напрямую `присоединиться` к своей `комнате`, введя ссылку https://mirotalk.up.railway.app/join/имя-вашей-комнаты `или` https://mirotalk.herokuapp.com/join/имя-вашей-комнаты
 
 
 ---
 
 ## Docker
 
--   Install https://docs.docker.com/compose/install/
+-   Установка https://docs.docker.com/compose/install/
 
 ```bash
 # copy .env.template to .env
@@ -41,6 +41,6 @@ $ docker-compose up # -d
 $ docker-compose down
 ```
 
--   Open http://localhost:3000 in browser
+-   откройте http://localhost:3000 в браузере
 
 ---
