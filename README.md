@@ -10,10 +10,6 @@
 
 Работает на `WebRTC` с использованием Google Stun и [numb](http://numb.viagenie.ca/) Turn. MiroTalk обеспечивает качество видео и задержку, недоступную при использовании традиционных технологий.
 
-Откройте приложение со следующими **поддерживаемыми браузерами** и многими другими...
-
-[![browsers](public/images/browsers.png)](https://mirotalk.herokuapp.com/)
-
 ## https://mirotalk.herokuapp.com/
 
 <br>
