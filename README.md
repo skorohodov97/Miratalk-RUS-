@@ -29,14 +29,16 @@
 -   Установка https://docs.docker.com/compose/install/
 
 ```bash
-# copy .env.template to .env
-$ cp .env.template .env
-# build or rebuild services
+# Скорируйте app/src/config.template.js в app/src/config.js и отредактируйте его, если это необходимо
+$ cp app/src/config.template.js app/src/config.js
+# Скорируйте docker-compose.template.yml в docker-compose.yml и отредактируйте его, если это необходимо
+$ cp docker-compose.template.yml docker-compose.yml
+# Создание или перестройка служб
 $ docker-compose build
-# create and start containers
+# Создание и запуск контейнеров
 $ docker-compose up # -d
-# stop and remove resources
+# Остановить и удалить ресурсы
 $ docker-compose down
 ```
 
--   откройте http://localhost:3000 в браузере
+-   откройте http://localhost:3010 в браузере
