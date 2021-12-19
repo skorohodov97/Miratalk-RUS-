@@ -7,10 +7,15 @@
 
 [![Автор](https://img.shields.io/badge/Author-Miroslav-brightgreen.svg)](https://github.com/miroslavpejic85/mirotalk)
 ![License: AGPLv3](https://img.shields.io/badge/License-AGPLv3-blue.svg)
+![Support: PayPal](https://img.shields.io/badge/Support-PayPal-brightgreen.svg)
+![Powered by: DigitalOcean](https://img.shields.io/badge/Powered_by-DigitalOcean-blue.svg)
+![Code style: Prettier](https://img.shields.io/badge/Code_style-Prettier-pink.svg)
 
-Работает на `WebRTC` с использованием Google Stun и [numb](http://numb.viagenie.ca/) Turn. MiroTalk обеспечивает качество видео и задержку, недоступную при использовании традиционных технологий.
+Работает от `WebRTC` встроенного сервера SFU и SFU.
 
-## https://mirotalk.herokuapp.com/
+Откройте приложение со следующими поддерживаемыми браузерами и многими другими...
+
+## https://sfu.mirotalk.org/
 
 ## Демо
 
