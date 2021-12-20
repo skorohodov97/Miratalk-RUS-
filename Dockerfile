@@ -27,7 +27,18 @@ RUN apt-get install -y vim
 COPY package.json .
 
 RUN npm install
+/*
+# 2. Развертываем приложение  на NGINX
+FROM nginx
 
+# Заменяем дефолтную страницу nginx соответствующей веб-приложению
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder /dist /usr/share/nginx/html
+
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+*/
 COPY app app
 COPY public public
 
