@@ -247,13 +247,13 @@ function whoAreYou() {
         allowEscapeKey: false,
         background: swalBackground,
         input: 'text',
-        inputPlaceholder: 'Enter your name',
+        inputPlaceholder: 'Введите ваше имя',
         html: `<br />
         <div style="overflow: hidden;">
             <button id="initAudioButton" class="fas fa-microphone" onclick="handleAudio(event)"></button>
             <button id="initVideoButton" class="fas fa-video" onclick="handleVideo(event)"></button>
         </div>`,
-        confirmButtonText: `Join meeting`,
+        confirmButtonText: `Присоединиться к встрече`,
         showClass: {
             popup: 'animate__animated animate__fadeInDown',
         },
