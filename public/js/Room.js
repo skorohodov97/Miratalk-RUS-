@@ -316,7 +316,7 @@ async function shareRoom(useNavigator = false) {
         Swal.fire({
             background: swalBackground,
             position: 'center',
-            title: '<strong>Hello ' + peer_name + '</strong>',
+            title: '<strong>Привет ' + peer_name + '</strong>',
             html:
                 `
             <br/>
@@ -324,15 +324,15 @@ async function shareRoom(useNavigator = false) {
                 <canvas id="qrRoom"></canvas>
             </div>
             <br/><br/>
-            <p style="background:transparent; color:white;">Share this meeting invite others to join.</p>
+            <p style="background:transparent; color:white;">Поделитесь этой встречей, пригласите других присоединиться.</p>
             <p style="background:transparent; color:rgb(8, 189, 89);">` +
                 RoomURL +
                 `</p>`,
             showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: `Copy meeting URL`,
-            denyButtonText: `Email invite`,
-            cancelButtonText: `Close`,
+            confirmButtonText: `Скопировать URL встречи`,
+            denyButtonText: `Пригласить по электронной почте`,
+            cancelButtonText: `Закрыть`,
             showClass: {
                 popup: 'animate__animated animate__fadeInUp',
             },
