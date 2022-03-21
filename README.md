@@ -35,6 +35,6 @@ $ docker-compose down
 
 <br>
 
-# Автор
+### Автор
 
 https://github.com/miroslavpejic85/mirotalksfu
