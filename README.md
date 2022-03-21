@@ -32,3 +32,9 @@ $ docker-compose down
 ```
 
 -   откройте http://localhost:3000 в браузере
+
+<br>
+
+#Автор
+
+https://github.com/miroslavpejic85/mirotalksfu
