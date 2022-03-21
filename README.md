@@ -7,9 +7,7 @@
 
 Работает на `WebRTC` с использованием Google Stun и [numb](http://numb.viagenie.ca/) Turn. MiroTalk обеспечивает качество видео и задержку, недоступную при использовании традиционных технологий.
 
-## https://mirotalk.herokuapp.com/
-
-## Демо
+<br>
 
 -   `Откройте` https://mirotalk.up.railway.app/newcall `или` https://mirotalk.herokuapp.com/newcall
 -   `Выберите` индвидуальное название комнаты и `Присоединяйтесь к комнате`
