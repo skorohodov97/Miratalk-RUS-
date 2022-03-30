@@ -4,12 +4,12 @@ if (location.href.substr(0, 5) !== 'https') location.href = 'https' + location.h
 
 const RoomURL = window.location.href;
 
-const swalBackground = 'linear-gradient(to left, #1f1e1e, #000000)';
-const swalBg = 'rgba(0, 0, 0, 0.7)';
+let swalBackground = 'radial-gradient(#393939, #000000)';
 const swalImageUrl = '../images/pricing-illustration.svg';
 
 const url = {
-    ipLookup: 'https://extreme-ip-lookup.com/json/?key=demo',
+    ipLookup: 'https://extreme-ip-lookup.com/json/?key=demo2',
+    survey: 'https://www.questionpro.com/t/AUs7VZq02P',
 };
 
 const _PEER = {
@@ -24,18 +24,21 @@ const _PEER = {
     sendMsg: '<i class="fas fa-paper-plane"></i>',
 };
 
+const surveyActive = true;
+
 let participantsCount = 0;
 
 let rc = null;
 let producer = null;
 
-let peer_name = 'peer_' + getRandomNumber(5);
+let room_id = getRoomId();
+let peer_name = getPeerName();
+let notify = getNotify();
+
 let peer_geo = null;
 let peer_info = null;
 
-let room_id = location.pathname.substring(6);
 let isEnumerateDevices = false;
-
 let isAudioAllowed = false;
 let isVideoAllowed = false;
 let isScreenAllowed = false;
@@ -59,23 +62,28 @@ let isButtonsVisible = false;
 
 const socket = io();
 
-function getRandomNumber(length) {
-    let result = '';
-    let characters = '0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
 function initClient() {
     if (!DetectRTC.isMobileDevice) {
+        setTippy('shareButton', 'Share room', 'right');
+        setTippy('startAudioButton', 'Start the audio', 'right');
+        setTippy('stopAudioButton', 'Stop the audio', 'right');
+        setTippy('startVideoButton', 'Start the video', 'right');
+        setTippy('stopVideoButton', 'Stop the video', 'right');
+        setTippy('startScreenButton', 'Start screen share', 'right');
+        setTippy('stopScreenButton', 'Stop screen share', 'right');
+        setTippy('swapCameraButton', 'Swap the camera', 'right');
+        setTippy('chatButton', 'Toggle the chat', 'right');
+        setTippy('whiteboardButton', 'Toggle the whiteboard', 'right');
+        setTippy('settingsButton', 'Toggle the settings', 'right');
+        setTippy('exitButton', 'Leave room', 'right');
         setTippy('tabDevicesBtn', 'Devices', 'top');
         setTippy('tabRecordingBtn', 'Recording', 'top');
         setTippy('tabRoomBtn', 'Room', 'top');
         setTippy('tabYoutubeBtn', 'YouTube', 'top');
+        setTippy('tabAspectBtn', 'Aspect', 'top');
         setTippy('tabStylingBtn', 'Styling', 'top');
+        setTippy('wbBackgroundColorEl', 'Background color', 'top');
+        setTippy('wbDrawingColorEl', 'Drawing color', 'top');
         setTippy('whiteboardPencilBtn', 'Drawing mode', 'top');
         setTippy('whiteboardObjectBtn', 'Object mode', 'top');
         setTippy('whiteboardUndoBtn', 'Undo', 'top');
@@ -92,8 +100,9 @@ function initClient() {
         setTippy('participantsRefreshBtn', 'Refresh', 'top');
         setTippy('chatMessage', 'Press enter to send', 'top-start');
         setTippy('chatSendButton', 'Send', 'top');
+        setTippy('chatSpeechStartButton', 'Start speech recognition', 'top');
+        setTippy('chatSpeechStopButton', 'Stop speech recognition', 'top');
         setTippy('chatEmojiButton', 'Emoji', 'top');
-        setTippy('chatCloseEmojiButton', 'Close emoji', 'top');
         setTippy('chatCleanButton', 'Clean', 'bottom');
         setTippy('chatSaveButton', 'Save', 'bottom');
         setTippy('sessionTime', 'Session time', 'right');
@@ -107,6 +116,30 @@ function setTippy(elem, content, placement) {
         content: content,
         placement: placement,
     });
+}
+
+// ####################################################
+// GET ROOM ID
+// ####################################################
+
+function getRoomId() {
+    let qs = new URLSearchParams(window.location.search);
+    let queryRoomId = qs.get('room');
+    let roomId = queryRoomId ? queryRoomId : location.pathname.substring(6);
+    if (roomId == '') {
+        roomId = makeId(12);
+    }
+    return roomId;
+}
+
+function makeId(length) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
 
 // ####################################################
@@ -140,7 +173,7 @@ async function initEnumerateDevices() {
         });
 
     if (!isAudioAllowed && !isVideoAllowed) {
-        window.location.href = `/permission?room_id=${room_id}&message=Not allowed both Audio and Video`;
+        openURL(`/permission?room_id=${room_id}&message=Not allowed both Audio and Video`);
     } else {
         hide(loadingDiv);
         getPeerGeoLocation();
@@ -205,6 +238,25 @@ function appenChild(device, el) {
 }
 
 // ####################################################
+// API CHECK
+// ####################################################
+
+function getNotify() {
+    let qs = new URLSearchParams(window.location.search);
+    let notify = qs.get('notify');
+    if (notify) {
+        let queryNotify = notify === '1' || notify === 'true';
+        if (queryNotify != null) return queryNotify;
+    }
+    return true;
+}
+
+function getPeerName() {
+    let qs = new URLSearchParams(window.location.search);
+    return qs.get('name');
+}
+
+// ####################################################
 // SOME PEER INFO
 // ####################################################
 
@@ -242,18 +294,26 @@ function getPeerGeoLocation() {
 function whoAreYou() {
     console.log('04 ----> Who are you');
 
+    if (peer_name) {
+        checkMedia();
+        getPeerInfo();
+        notify ? shareRoom() : sound('joined');
+        joinRoom(peer_name, room_id);
+        return;
+    }
+
     Swal.fire({
         allowOutsideClick: false,
         allowEscapeKey: false,
         background: swalBackground,
         input: 'text',
-        inputPlaceholder: 'Введите ваше имя',
+        inputPlaceholder: 'Enter your name',
         html: `<br />
         <div style="overflow: hidden;">
             <button id="initAudioButton" class="fas fa-microphone" onclick="handleAudio(event)"></button>
             <button id="initVideoButton" class="fas fa-video" onclick="handleVideo(event)"></button>
         </div>`,
-        confirmButtonText: `Присоединиться к встрече`,
+        confirmButtonText: `Join meeting`,
         showClass: {
             popup: 'animate__animated animate__fadeInDown',
         },
@@ -266,13 +326,13 @@ function whoAreYou() {
         },
     }).then(() => {
         getPeerInfo();
-        shareRoom();
+        notify ? shareRoom() : sound('joined');
         joinRoom(peer_name, room_id);
     });
 
     if (!DetectRTC.isMobileDevice) {
-        setTippy('initAudioButton', 'Enable / Disable audio', 'left');
-        setTippy('initVideoButton', 'Enable / Disable video', 'right');
+        setTippy('initAudioButton', 'Toggle the audio', 'left');
+        setTippy('initVideoButton', 'Toggle the video', 'right');
     }
 
     initAudioButton = document.getElementById('initAudioButton');
@@ -293,6 +353,22 @@ function handleVideo(e) {
     e.target.className = 'fas fa-video' + (isVideoAllowed ? '' : '-slash');
     setColor(e.target, isVideoAllowed ? 'white' : 'red');
     setColor(startVideoButton, isVideoAllowed ? 'white' : 'red');
+}
+
+function checkMedia() {
+    let qs = new URLSearchParams(window.location.search);
+    let audio = qs.get('audio');
+    let video = qs.get('video');
+    if (audio) {
+        audio = audio.toLowerCase();
+        let queryPeerAudio = audio === '1' || audio === 'true';
+        if (queryPeerAudio != null) isAudioAllowed = queryPeerAudio;
+    }
+    if (video) {
+        video = video.toLowerCase();
+        let queryPeerVideo = video === '1' || video === 'true';
+        if (queryPeerVideo != null) isVideoAllowed = queryPeerVideo;
+    }
 }
 
 // ####################################################
@@ -316,7 +392,7 @@ async function shareRoom(useNavigator = false) {
         Swal.fire({
             background: swalBackground,
             position: 'center',
-            title: '<strong>Привет ' + peer_name + '</strong>',
+            title: '<strong>Hello ' + peer_name + '</strong>',
             html:
                 `
             <br/>
@@ -324,15 +400,15 @@ async function shareRoom(useNavigator = false) {
                 <canvas id="qrRoom"></canvas>
             </div>
             <br/><br/>
-            <p style="background:transparent; color:white;">Поделитесь этой встречей, пригласите других присоединиться.</p>
+            <p style="background:transparent; color:white;">Invite others to join. Share this meeting link.</p>
             <p style="background:transparent; color:rgb(8, 189, 89);">` +
                 RoomURL +
                 `</p>`,
             showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: `Скопировать URL встречи`,
-            denyButtonText: `Пригласить по электронной почте`,
-            cancelButtonText: `Закрыть`,
+            confirmButtonText: `Copy URL`,
+            denyButtonText: `Email invite`,
+            cancelButtonText: `Close`,
             showClass: {
                 popup: 'animate__animated animate__fadeInUp',
             },
@@ -378,7 +454,7 @@ function copyRoomURL() {
     tmpInput.setSelectionRange(0, 99999); // For mobile devices
     navigator.clipboard.writeText(tmpInput.value);
     document.body.removeChild(tmpInput);
-    userLog('info', 'Room URL copied to clipboard', 'top-end');
+    userLog('info', 'Meeting URL copied to clipboard 👍', 'top-end');
 }
 
 function shareRoomByEmail(message) {
@@ -389,14 +465,14 @@ function shareRoomByEmail(message) {
 }
 
 // ####################################################
-// JOIN TO ROOM
+// JOIN ROOM
 // ####################################################
 
 function joinRoom(peer_name, room_id) {
     if (rc && rc.isConnected()) {
         console.log('Already connected to a room');
     } else {
-        console.log('05 ----> join to Room ' + room_id);
+        console.log('05 ----> join Room ' + room_id);
         rc = new RoomClient(
             remoteAudios,
             videoMediaContainer,
@@ -421,6 +497,9 @@ function roomIsReady() {
     show(chatButton);
     show(chatSendButton);
     show(chatEmojiButton);
+    if (isWebkitSpeechRecognitionSupported) {
+        show(chatSpeechStartButton);
+    }
     if (DetectRTC.isMobileDevice) {
         show(swapCameraButton);
         setChatSize();
@@ -429,6 +508,8 @@ function roomIsReady() {
         rc.makeDraggable(mySettings, mySettingsHeader);
         rc.makeDraggable(participants, participantsHeader);
         rc.makeDraggable(whiteboard, whiteboardHeader);
+        rc.makeDraggable(sendFileDiv, imgShareSend);
+        rc.makeDraggable(receiveFileDiv, imgShareReceive);
         if (navigator.getDisplayMedia || navigator.mediaDevices.getDisplayMedia) {
             show(startScreenButton);
         }
@@ -561,6 +642,9 @@ function handleButtons() {
     tabYoutubeBtn.onclick = (e) => {
         rc.openTab(e, 'tabYoutube');
     };
+    tabAspectBtn.onclick = (e) => {
+        rc.openTab(e, 'tabAspect');
+    };
     tabStylingBtn.onclick = (e) => {
         rc.openTab(e, 'tabStyling');
     };
@@ -582,8 +666,11 @@ function handleButtons() {
     chatEmojiButton.onclick = () => {
         rc.toggleChatEmoji();
     };
-    chatCloseEmojiButton.onclick = () => {
-        rc.toggleChatEmoji();
+    chatSpeechStartButton.onclick = () => {
+        startSpeech(true);
+    };
+    chatSpeechStopButton.onclick = () => {
+        startSpeech(false);
     };
     fullScreenButton.onclick = () => {
         rc.toggleFullScreen();
@@ -730,9 +817,21 @@ function handleSelects() {
         rc.closeThenProduce(RoomClient.mediaType.video, videoSelect.value);
     };
     // styling
+    BtnsAspectRatio.onchange = () => {
+        setAspectRatio(BtnsAspectRatio.value);
+    };
+    BtnVideoObjectFit.onchange = () => {
+        handleVideoObjectFit(BtnVideoObjectFit.value);
+    }; // cover
+    BtnVideoObjectFit.selectedIndex = 2;
+
+    selectTheme.onchange = () => {
+        setTheme(selectTheme.value);
+    };
     BtnsBarPosition.onchange = () => {
         rc.changeBtnsBarPosition(BtnsBarPosition.value);
     };
+
     // whiteboard options
     wbDrawingColorEl.onchange = () => {
         wbCanvas.freeDrawingBrush.color = wbDrawingColorEl.value;
@@ -897,7 +996,11 @@ function handleRoomClientEvents() {
     });
     rc.on(RoomClient.EVENTS.exitRoom, () => {
         console.log('Room Client leave room');
-        window.location.href = '/newroom';
+        if (surveyActive) {
+            openURL(url.survey);
+        } else {
+            openURL('/newroom');
+        }
     });
 }
 
@@ -965,6 +1068,10 @@ async function sound(name) {
 
 function isImageURL(url) {
     return url.match(/\.(jpeg|jpg|gif|png|tiff|bmp)$/) != null;
+}
+
+function openURL(url, blank = false) {
+    blank ? window.open(url, '_blank') : (window.location.href = url);
 }
 
 // ####################################################
@@ -1368,7 +1475,7 @@ async function getParticipantsTable(peers) {
 
     table += `
     <tr>
-        <td>👥 All</td>
+        <td>&nbsp;<i class="fas fa-users fa-lg"></i>&nbsp;&nbsp;all</td>
         <td><button id="muteAllButton" onclick="rc.peerAction('me','${rc.peer_id}','mute',true,true)">${_PEER.audioOff}</button></td>
         <td><button id="hideAllButton" onclick="rc.peerAction('me','${rc.peer_id}','hide',true,true)">${_PEER.videoOff}</button></td>
         <td></td>
@@ -1380,7 +1487,7 @@ async function getParticipantsTable(peers) {
 
     for (let peer of Array.from(peers.keys())) {
         let peer_info = peers.get(peer).peer_info;
-        let peer_name = '👤 ' + peer_info.peer_name;
+        let peer_name = peer_info.peer_name;
         let peer_audio = peer_info.peer_audio ? _PEER.audioOn : _PEER.audioOff;
         let peer_video = peer_info.peer_video ? _PEER.videoOn : _PEER.videoOff;
         let peer_hand = peer_info.peer_hand ? _PEER.raiseHand : _PEER.lowerHand;
@@ -1388,10 +1495,11 @@ async function getParticipantsTable(peers) {
         let peer_sendFile = _PEER.sendFile;
         let peer_sendMsg = _PEER.sendMsg;
         let peer_id = peer_info.peer_id;
+        let avatarImg = getParticipantAvatar(peer_name);
         if (rc.peer_id === peer_id) {
             table += `
             <tr id='${peer_name}'>
-                <td>${peer_name} (me)</td>
+                <td><img src='${avatarImg}'>&nbsp;&nbsp;${peer_name} (me)</td>
                 <td><button>${peer_audio}</button></td>
                 <td><button>${peer_video}</button></td>
                 <td><button>${peer_hand}</button></td>
@@ -1403,7 +1511,7 @@ async function getParticipantsTable(peers) {
         } else {
             table += `
             <tr id='${peer_id}'>
-                <td>${peer_name}</td>
+                <td><img src='${avatarImg}'>&nbsp;&nbsp;${peer_name}</td>
                 <td><button id='${peer_id}___pAudio' onclick="rc.peerAction('me',this.id,'mute')">${peer_audio}</button></td>
                 <td><button id='${peer_id}___pVideo' onclick="rc.peerAction('me',this.id,'hide')">${peer_video}</button></td>
                 <td><button>${peer_hand}</button></td>
@@ -1420,6 +1528,111 @@ async function getParticipantsTable(peers) {
 
 function refreshParticipantsCount(count) {
     participantsTitle.innerHTML = `<i class="fas fa-users"></i> Participants ( ${count} )`;
+    adaptAspectRatio(count);
+}
+
+function getParticipantAvatar(peerName) {
+    return cfg.msgAvatar + '?name=' + peerName + '&size=32' + '&background=random&rounded=true';
+}
+
+// ####################################################
+// HANDLE VIDEO OBJ FIT
+// ####################################################
+
+function handleVideoObjectFit(value) {
+    document.documentElement.style.setProperty('--videoObjFit', value);
+}
+
+// ####################################################
+// SET THEME
+// ####################################################
+
+function setTheme(theme) {
+    switch (theme) {
+        case 'dark':
+            swalBackground = 'radial-gradient(#393939, #000000)';
+            document.documentElement.style.setProperty('--body-bg', 'radial-gradient(#393939, #000000)');
+            document.documentElement.style.setProperty('--msger-bg', 'radial-gradient(#393939, #000000)');
+            document.documentElement.style.setProperty('--wb-bg', 'radial-gradient(#393939, #000000)');
+            break;
+        case 'grey':
+            swalBackground = 'radial-gradient(#666, #333)';
+            document.documentElement.style.setProperty('--body-bg', 'radial-gradient(#666, #333)');
+            document.documentElement.style.setProperty('--msger-bg', 'radial-gradient(#666, #333)');
+            document.documentElement.style.setProperty('--wb-bg', 'radial-gradient(#797979, #000)');
+            break;
+        //...
+    }
+}
+
+// ####################################################
+// HANDLE ASPECT RATIO
+// ####################################################
+
+function handleAspectRatio() {
+    if (participantsCount > 1) {
+        adaptAspectRatio(videoMediaContainer.childElementCount);
+    } else {
+        resizeVideoMedia();
+    }
+}
+
+function adaptAspectRatio(participantsCount) {
+    /* 
+        ['0:0', '4:3', '16:9', '1:1', '1:2'];
+    */
+    let desktop,
+        mobile = 1;
+    // desktop aspect ratio
+    switch (participantsCount) {
+        case 1:
+        case 3:
+        case 4:
+        case 7:
+        case 9:
+            desktop = 2; // (16:9)
+            break;
+        case 5:
+        case 6:
+        case 10:
+        case 11:
+            desktop = 1; // (4:3)
+            break;
+        case 2:
+        case 8:
+            desktop = 3; // (1:1)
+            break;
+        default:
+            desktop = 0; // (0:0)
+    }
+    // mobile aspect ratio
+    switch (participantsCount) {
+        case 3:
+        case 9:
+        case 10:
+            mobile = 2; // (16:9)
+            break;
+        case 2:
+        case 7:
+        case 8:
+        case 11:
+            mobile = 1; // (4:3)
+            break;
+        case 1:
+        case 4:
+        case 5:
+        case 6:
+            mobile = 3; // (1:1)
+            break;
+        default:
+            mobile = 3; // (1:1)
+    }
+    if (participantsCount > 11) {
+        desktop = 1; // (4:3)
+        mobile = 3; // (1:1)
+    }
+    BtnsAspectRatio.selectedIndex = DetectRTC.isMobileDevice ? mobile : desktop;
+    setAspectRatio(BtnsAspectRatio.selectedIndex);
 }
 
 // ####################################################
