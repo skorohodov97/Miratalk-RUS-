@@ -307,13 +307,13 @@ function whoAreYou() {
         allowEscapeKey: false,
         background: swalBackground,
         input: 'text',
-        inputPlaceholder: 'Enter your name',
+        inputPlaceholder: 'Введите ваше имя',
         html: `<br />
         <div style="overflow: hidden;">
             <button id="initAudioButton" class="fas fa-microphone" onclick="handleAudio(event)"></button>
             <button id="initVideoButton" class="fas fa-video" onclick="handleVideo(event)"></button>
         </div>`,
-        confirmButtonText: `Join meeting`,
+        confirmButtonText: `Присоединиться к встрече`,
         showClass: {
             popup: 'animate__animated animate__fadeInDown',
         },
@@ -321,7 +321,7 @@ function whoAreYou() {
             popup: 'animate__animated animate__fadeOutUp',
         },
         inputValidator: (name) => {
-            if (!name) return 'Please enter your name';
+            if (!name) return 'Пожалуйста, введите Ваше имя';
             peer_name = name;
         },
     }).then(() => {
@@ -392,7 +392,7 @@ async function shareRoom(useNavigator = false) {
         Swal.fire({
             background: swalBackground,
             position: 'center',
-            title: '<strong>Hello ' + peer_name + '</strong>',
+            title: '<strong>Привет ' + peer_name + '</strong>',
             html:
                 `
             <br/>
@@ -400,15 +400,15 @@ async function shareRoom(useNavigator = false) {
                 <canvas id="qrRoom"></canvas>
             </div>
             <br/><br/>
-            <p style="background:transparent; color:white;">Invite others to join. Share this meeting link.</p>
+            <p style="background:transparent; color:white;">Поделитесь этой встречей, пригласите других присоединиться.</p>
             <p style="background:transparent; color:rgb(8, 189, 89);">` +
                 RoomURL +
                 `</p>`,
             showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: `Copy URL`,
-            denyButtonText: `Email invite`,
-            cancelButtonText: `Close`,
+            confirmButtonText: `Скопировать URL встречи`,
+            denyButtonText: `Пригласить по электронной почте`,
+            cancelButtonText: `Закрыть`,
             showClass: {
                 popup: 'animate__animated animate__fadeInUp',
             },
