@@ -18,20 +18,25 @@
 
 ## Docker
 
--   Установка https://docs.docker.com/compose/install/
+-   Установите docker engine: https://docs.docker.com/engine/install/
+-   Установите docker compose: https://docs.docker.com/compose/install/
 
 ```bash
-# copy .env.template to .env
-$ cp .env.template .env
-# build or rebuild services
+# Copy app/src/config.template.js in app/src/config.js and edit it if needed
+$ cp app/src/config.template.js app/src/config.js
+# Copy docker-compose.template.yml in docker-compose.yml and edit it if needed
+$ cp docker-compose.template.yml docker-compose.yml
+# Build or rebuild services
 $ docker-compose build
-# create and start containers
+# Create and start containers
 $ docker-compose up # -d
-# stop and remove resources
+# Stop and remove resources
 $ docker-compose down
 ```
 
--   откройте http://localhost:3000 в браузере
+-   Откройте https://localhost:3010 в браузере
+
+---
 
 <br>
 
