@@ -17,8 +17,7 @@
     right: 0px;
 }
 
-#videoMediaContainer div {
-    /* Camera */
+.Camera {
     position: relative;
     vertical-align: middle;
     align-self: center;
@@ -27,24 +26,9 @@
     display: inline-block;
     background: transparent;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.4);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
     animation: show 0.4s ease;
-}
-
-#videoMediaContainer p {
-    position: absolute;
-    bottom: 0;
-    color: white;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    margin: 5px;
-    width: auto;
-    height: 25px;
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.4);
 }
 
 #videoMediaContainer i {
@@ -62,12 +46,37 @@
     background: rgba(0, 0, 0, 0.4);
 }
 
-#videoMediaContainer button {
+.audio {
     position: absolute;
     right: 0;
-    color: white;
+    color: #fff;
+    margin: 5px;
+    width: auto;
+    height: 25px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.username {
+    position: absolute;
+    bottom: 0;
+    color: #fff;
+    font-size: 14px;
     display: flex;
     align-items: center;
+    padding: 5px;
+    margin: 5px;
+    width: auto;
+    height: 25px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.fscreen {
+    position: absolute;
+    right: 0;
+    bottom: 0px;
+    color: #fff;
     margin: 5px;
     width: auto;
     height: 25px;
@@ -83,6 +92,40 @@
     display: none;
 }
 
+.videoMenuBar {
+    z-index: 2;
+    position: absolute;
+    padding: 3px;
+    background: var(--bg);
+    font-size: small;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    cursor: default;
+    /* center */
+    top: 18px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+
+.videoMenuBar button {
+    float: right;
+    margin-right: 3px;
+    color: #fff;
+    background: transparent;
+    border-radius: 5px;
+    display: inline;
+    border: none;
+}
+
+.videoMenuBar button:hover {
+    color: grey;
+    transition: all 0.3s ease-in-out;
+}
+
 #videoMediaContainer video {
     position: absolute;
     margin-left: auto;
@@ -92,14 +135,13 @@
 video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--videoObjFit);
     border-radius: 10px;
-    box-shadow: var(--box-shadow);
     cursor: pointer;
 }
 
 video:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 video:fullscreen {
