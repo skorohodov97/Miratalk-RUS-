@@ -32,7 +32,7 @@
         />
         <meta
             name="keywords"
-            content="webrtc, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
+            content="webrtc, miro, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, webrtc p2p, webrtc sfu, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, sfu, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
         />
 
         <!-- https://ogp.me -->
@@ -47,6 +47,7 @@
         <meta property="og:image" content="https://sfu.mirotalk.org/images/mirotalksfu.png" />
 
         <!-- StyleSheet -->
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,600" />
         <link rel="stylesheet" href="../css/landing.css" />
 
@@ -82,8 +83,8 @@
                                     Start conference.
                                 </h1>
                                 <p class="hero-paragraph">
-                                    Each room has its own disposable URL. Just pick a room name and share your custom
-                                    URL. It's really that easy.
+                                    Each room has its disposable URL. Just pick a room name and share your custom URL.
+                                    It's that easy.
                                 </p>
                             </div>
                             <div class="hero-figure anime-element">
@@ -122,17 +123,21 @@
                                         <button
                                             id="joinRoomButton"
                                             class="button button-primary pulse"
-                                            onclick="{window.location.href = '/join/' + document.getElementById('roomName').value}"
+                                            onclick="joinRoom()"
                                         >
-                                            Join to room
+                                            Join Room
                                         </button>
                                         <script>
                                             document.getElementById('roomName').onkeyup = (e) => {
                                                 if (e.keyCode === 13) {
                                                     e.preventDefault();
-                                                    document.getElementById('joinRoomButton').click();
+                                                    joinRoom();
                                                 }
                                             };
+                                            function joinRoom() {
+                                                let roomName = document.getElementById('roomName').value;
+                                                window.location.href = '/join/' + roomName;
+                                            }
                                         </script>
                                     </div>
                                 </div>
@@ -151,6 +156,9 @@
                             </a>
                         </div>
                         <ul class="footer-links list-reset">
+                            <li>
+                                <a href="/about">About</a>
+                            </li>
                             <li>
                                 <a href="/privacy">Privacy Policy</a>
                             </li>
@@ -184,14 +192,25 @@
                                     </svg>
                                 </a>
                             </li>
+                            <li>
+                                <a target="_blank" href="mailto:miroslav.pejic.85@gmail.com">
+                                    <span class="screen-reader-text">Google</span>
+                                    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.9 7v2.4H12c-.2 1-1.2 3-4 3-2.4 0-4.3-2-4.3-4.4 0-2.4 2-4.4 4.3-4.4 1.4 0 2.3.6 2.8 1.1l1.9-1.8C11.5 1.7 9.9 1 8 1 4.1 1 1 4.1 1 8s3.1 7 7 7c4 0 6.7-2.8 6.7-6.8 0-.5 0-.8-.1-1.2H7.9z"
+                                            fill="#0270D7"
+                                        />
+                                    </svg>
+                                </a>
+                            </li>
                         </ul>
-                        <div class="footer-copyright">&copy; 2021 MiroTalk SFU, all rights reserved</div>
+                        <div class="footer-copyright">&copy; 2022 MiroTalk SFU, all rights reserved</div>
                     </div>
                 </div>
             </footer>
         </div>
 
         <script src="../js/landing.js"></script>
-        <script src="../js/newroom.js"></script>
+        <script src="../js/newRoom.js"></script>
     </body>
 </html>

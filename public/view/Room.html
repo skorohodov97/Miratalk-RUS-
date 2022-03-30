@@ -30,7 +30,7 @@
         />
         <meta
             name="keywords"
-            content="webrtc, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
+            content="webrtc, miro, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, webrtc p2p, webrtc sfu, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, sfu, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
         />
 
         <!-- https://ogp.me -->
@@ -75,11 +75,12 @@
         <script src="../sfu/MediasoupClient.js"></script>
         <script src="../js/Room.js"></script>
         <script src="../js/RoomClient.js"></script>
+        <script src="../js/SpeechRec.js"></script>
         <script src="../js/VideoGrid.js"></script>
         <script src="https://kit.fontawesome.com/d2f1016e6f.js" crossorigin="anonymous"></script>
         <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/460/fabric.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/500/fabric.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4"></script>
         <script src="https://unpkg.com/emoji-picker-element@1" type="module"></script>
         <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -102,10 +103,10 @@ access to use this app.
             <button id="stopAudioButton" class="hidden"><i class="fas fa-microphone"></i></button>
             <button id="startVideoButton" class="hidden"><i class="fas fa-video-slash"></i></button>
             <button id="stopVideoButton" class="hidden"><i class="fas fa-video"></i></button>
-            <button id="swapCameraButton" class="hidden"><i class="fas fa-sync-alt"></i></button>
-            <button id="chatButton" class="hidden"><i class="fas fa-comments"></i></button>
             <button id="startScreenButton" class="hidden"><i class="fas fa-desktop"></i></button>
             <button id="stopScreenButton" class="hidden"><i class="fas fa-stop-circle"></i></button>
+            <button id="swapCameraButton" class="hidden"><i class="fas fa-sync-alt"></i></button>
+            <button id="chatButton" class="hidden"><i class="fas fa-comments"></i></button>
             <button id="whiteboardButton" class="hidden"><i class="fas fa-chalkboard-teacher"></i></button>
             <button id="settingsButton" class="hidden"><i class="fas fa-cogs"></i></button>
             <button id="exitButton" class="hidden"><i class="fas fa-phone-slash"></i></button>
@@ -123,6 +124,7 @@ access to use this app.
                     <button id="tabRoomBtn" class="fas fa-home tablinks"></button>
                     <button id="tabRecordingBtn" class="fas fa-record-vinyl tablinks"></button>
                     <button id="tabYoutubeBtn" class="fab fa-youtube tablinks"></button>
+                    <button id="tabAspectBtn" class="fas fa-cog tablinks"></button>
                     <button id="tabStylingBtn" class="fas fa-palette tablinks"></button>
                 </div>
 
@@ -226,7 +228,38 @@ access to use this app.
                     <br />
                 </div>
 
+                <div id="tabAspect" class="tabcontent">
+                    <br />
+                    <p>Aspect ratio:</p>
+                    <br />
+                    <select id="BtnsAspectRatio" class="form-select text-light bg-dark">
+                        <option value="0">default</option>
+                        <option value="1">4:3</option>
+                        <option value="2">16:9</option>
+                        <option value="3">1:1</option>
+                        <option value="4">1:2</option>
+                    </select>
+                    <br />
+                    <p>Video Object fit:</p>
+                    <br />
+                    <select id="BtnVideoObjectFit" class="form-select text-light bg-dark">
+                        <option value="fill">fill</option>
+                        <option value="contain">contain</option>
+                        <option value="cover">cover</option>
+                        <option value="scale-down">scale-down</option>
+                        <option value="none">none</option>
+                    </select>
+                    <br />
+                </div>
+
                 <div id="tabStyling" class="tabcontent">
+                    <br />
+                    <p>Theme:</p>
+                    <br />
+                    <select id="selectTheme" class="form-select text-light bg-dark">
+                        <option value="dark">⚫ &nbsp;Dark</option>
+                        <option value="grey">⚪ &nbsp;Grey</option>
+                    </select>
                     <br />
                     <p>Buttons bar:</p>
                     <br />
@@ -245,6 +278,7 @@ access to use this app.
         <div id="remoteAudios"></div>
 
         <div id="sendFileDiv" class="fadein center">
+            <img id="imgShareSend" src="../images/share.png" alt="mirotalksfu-share-send" class="center-img" /><br />
             <div id="sendFileInfo"></div>
             <div id="sendFilePercentage"></div>
             <progress id="sendProgress" max="0" value="0"></progress>
@@ -252,6 +286,12 @@ access to use this app.
         </div>
 
         <div id="receiveFileDiv" class="fadein center">
+            <img
+                id="imgShareReceive"
+                src="../images/share.png"
+                alt="mirotalksfu-share-receive"
+                class="center-img"
+            /><br />
             <div id="receiveFileInfo"></div>
             <div id="receiveFilePercentage"></div>
             <progress id="receiveProgress" max="0" value="0"></progress>
@@ -273,12 +313,12 @@ access to use this app.
 
         <section id="whiteboard" class="fadein center hidden">
             <header id="whiteboardHeader" class="whiteboard-header">
-                <div id="whiteboardTitle" class="whiteboard-header-title"></div>
+                <div id="whiteboardTitle" class="whiteboard-header-title">
+                    <button id="whiteboardCloseBtn" class="fas fa-times"></button>
+                </div>
                 <div class="whiteboard-header-options">
-                    pencil
-                    <input id="wbDrawingColorEl" class="whiteboardColorPicker" type="color" value="#FFFFFF" />
-                    background
                     <input id="wbBackgroundColorEl" class="whiteboardColorPicker" type="color" value="#000000" />
+                    <input id="wbDrawingColorEl" class="whiteboardColorPicker" type="color" value="#FFFFFF" />
                     <button id="whiteboardPencilBtn" class="fas fa-pencil-alt"></button>
                     <button id="whiteboardObjectBtn" class="fas fa-mouse-pointer"></button>
                     <button id="whiteboardUndoBtn" class="fas fa-undo"></button>
@@ -292,7 +332,6 @@ access to use this app.
                     <button id="whiteboardSaveBtn" class="fas fa-save"></button>
                     <button id="whiteboardEraserBtn" class="fas fa-eraser"></button>
                     <button id="whiteboardCleanBtn" class="fas fa-trash"></button>
-                    <button id="whiteboardCloseBtn" class="fas fa-times"></button>
                 </div>
             </header>
             <main>
@@ -320,11 +359,14 @@ access to use this app.
                         type="text"
                         placeholder="💬 Enter your message..."
                     />
-                    <button id="chatCloseEmojiButton" class="hidden">
-                        <i class="fas fa-times"></i>
-                    </button>
                     <button id="chatEmojiButton" class="hidden">
                         <i class="fas fa-smile"></i>
+                    </button>
+                    <button id="chatSpeechStartButton" class="hidden">
+                        <i class="fas fa-microphone-slash"></i>
+                    </button>
+                    <button id="chatSpeechStopButton" class="hidden">
+                        <i class="fas fa-microphone"></i>
                     </button>
                     <button id="chatSendButton" class="hidden">
                         <i class="fas fa-paper-plane"></i>

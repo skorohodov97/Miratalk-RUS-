@@ -16,7 +16,7 @@
 
         <!-- Title and Icon -->
 
-        <title>MiroTalk SFU - Allow Video or Audio access to join in the Room.</title>
+        <title>MiroTalk SFU - Host Protected login required.</title>
         <link rel="shortcut icon" href="../images/logo.svg" />
         <link rel="apple-touch-icon" href="../images/logo.svg" />
 
@@ -26,6 +26,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+        <meta
+            name="description"
+            content="MiroTalk SFU powered by WebRTC and mediasoup, Real-time secure video calls, messaging and screen sharing capabilities in the browser."
+        />
+        <meta
+            name="keywords"
+            content="webrtc, miro, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, webrtc p2p, webrtc sfu, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, sfu, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
+        />
+
         <!-- https://ogp.me -->
 
         <meta property="og:type" content="app-webrtc" />
@@ -33,7 +42,7 @@
         <meta property="og:title" content="Click the link to make a call." />
         <meta
             property="og:description"
-            content="MiroTalk SFU calling provides real-time HD quality and latency simply not available with traditional technology."
+            content="MiroTalk SFU calling provides real-time video calls, messaging and screen sharing."
         />
         <meta property="og:image" content="https://sfu.mirotalk.org/images/mirotalksfu.png" />
 
@@ -68,29 +77,46 @@
                     <div class="container">
                         <div class="hero-inner">
                             <div class="hero-copy">
-                                <h1 class="hero-title mt-0">Access denied.</h1>
-                                <p class="hero-paragraph" id="message"></p>
-                                <p class="hero-paragraph">
-                                    This app will not work without camera or microphone access. Please try again and
-                                    allow it.
-                                </p>
-                                <script>
-                                    let qs = new URLSearchParams(window.location.search);
-                                    let room_id = qs.get('room_id');
-                                    let message = qs.get('message');
-                                    console.log('Allow Camera or Audio', {
-                                        room_id: room_id,
-                                        message: message,
-                                    });
-                                    document.getElementById('message').innerHTML = message;
-                                </script>
-                                <div class="hero-cta">
-                                    <a
-                                        class="button button-primary pulse"
-                                        onclick="room_id ? window.location.href = '/join/' + room_id : window.location.href = '/newroom';"
-                                        >TRY AGAIN</a
-                                    >
+                                <div id="loginForm">
+                                    <br />
+                                    <div class="mb-12">
+                                        <input
+                                            id="username"
+                                            class="form-input"
+                                            type="name"
+                                            placeholder="Username"
+                                            required
+                                        />
+                                    </div>
+                                    <br />
+                                    <div class="mb-12">
+                                        <input
+                                            id="password"
+                                            class="form-input"
+                                            type="password"
+                                            placeholder="Password"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="mt-24 mb-32">
+                                        <button id="loginButton" class="button button-primary button-block">
+                                            Login
+                                        </button>
+                                    </div>
                                 </div>
+                                <script>
+                                    let loginBtn = document.getElementById('loginButton');
+
+                                    loginBtn.onclick = (e) => {
+                                        let username = document.getElementById('username').value;
+                                        let password = document.getElementById('password').value;
+                                        if (username && password) {
+                                            window.location.href = `/login?username=${username}&password=${password}`;
+                                            return;
+                                        }
+                                        alert('Username and Password required');
+                                    };
+                                </script>
                             </div>
                             <div class="hero-figure anime-element">
                                 <svg class="placeholder" width="528" height="396" viewBox="0 0 528 396">
