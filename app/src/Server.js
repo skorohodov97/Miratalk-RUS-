@@ -5,10 +5,12 @@ const cors = require('cors');
 const compression = require('compression');
 const https = require('httpolyglot');
 const mediasoup = require('mediasoup');
+const mediasoupClient = require('mediasoup-client');
 const config = require('./config');
 const path = require('path');
 const ngrok = require('ngrok');
 const fs = require('fs');
+const Host = require('./Host');
 const Room = require('./Room');
 const Peer = require('./Peer');
 const ServerApi = require('./ServerApi');
@@ -17,6 +19,8 @@ const log = new Logger('Server');
 const yamlJS = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = yamlJS.load(path.join(__dirname + '/../api/swagger.yaml'));
+const Sentry = require('@sentry/node');
+const { CaptureConsole } = require('@sentry/integrations');
 
 const app = express();
 
@@ -26,12 +30,48 @@ const options = {
 };
 
 const httpsServer = https.createServer(options, app);
-const io = require('socket.io')(httpsServer);
+const io = require('socket.io')(httpsServer, {
+    maxHttpBufferSize: 1e7,
+});
 const host = 'https://' + 'localhost' + ':' + config.listenPort; // config.listenIp
 const announcedIP = config.mediasoup.webRtcTransport.listenIps[0].announcedIp;
 
+const hostCfg = {
+    protected: config.hostProtected,
+    username: config.hostUsername,
+    password: config.hostPassword,
+    authenticated: !config.hostProtected,
+};
+
 const apiBasePath = '/api/v1'; // api endpoint path
 const api_docs = host + apiBasePath + '/docs'; // api docs
+
+// Sentry monitoring
+const sentryEnabled = config.sentry.enabled;
+const sentryDSN = config.sentry.DSN;
+const sentryTracesSampleRate = config.sentry.tracesSampleRate;
+if (sentryEnabled) {
+    Sentry.init({
+        dsn: sentryDSN,
+        integrations: [
+            new CaptureConsole({
+                // ['log', 'info', 'warn', 'error', 'debug', 'assert']
+                levels: ['warn', 'error'],
+            }),
+        ],
+        tracesSampleRate: sentryTracesSampleRate,
+    });
+    /*
+    log.log('test-log');
+    log.info('test-info');
+    log.warn('test-warning');
+    log.warn('test-error');
+    log.warn('test-debug');
+    */
+}
+
+// Authenticated IP by Login
+let authHost;
 
 // all mediasoup workers
 let workers = [];
@@ -40,9 +80,28 @@ let nextMediasoupWorkerIdx = 0;
 // all Room lists
 let roomList = new Map();
 
+// directory
+const dir = {
+    public: path.join(__dirname, '../../', 'public'),
+};
+
+// html views
+const view = {
+    about: path.join(__dirname, '../../', 'public/view/about.html'),
+    landing: path.join(__dirname, '../../', 'public/view/landing.html'),
+    login: path.join(__dirname, '../../', 'public/view/login.html'),
+    newRoom: path.join(__dirname, '../../', 'public/view/newroom.html'),
+    notFound: path.join(__dirname, '../../', 'public/view/404.html'),
+    permission: path.join(__dirname, '../../', 'public/view/permission.html'),
+    privacy: path.join(__dirname, '../../', 'public/view/privacy.html'),
+    room: path.join(__dirname, '../../', 'public/view/Room.html'),
+};
+
 app.use(cors());
 app.use(compression());
-app.use(express.static(path.join(__dirname, '../../', 'public')));
+app.use(express.json());
+app.use(express.static(dir.public));
+app.use(apiBasePath + '/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); // api docs
 
 // Remove trailing slashes in url handle bad requests
 app.use((err, req, res, next) => {
@@ -64,48 +123,93 @@ app.use((err, req, res, next) => {
 
 // all start from here
 app.get(['/'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../../', 'public/view/landing.html'));
+    if (hostCfg.protected == true) {
+        hostCfg.authenticated = false;
+        res.sendFile(view.login);
+    } else {
+        res.sendFile(view.landing);
+    }
+});
+
+// handle login on host protected
+app.get(['/login'], (req, res) => {
+    if (hostCfg.protected == true) {
+        let ip = getIP(req);
+        log.debug(`Request login to host from: ${ip}`, req.query);
+        if (req.query.username == hostCfg.username && req.query.password == hostCfg.password) {
+            hostCfg.authenticated = true;
+            authHost = new Host(ip, true);
+            log.debug('LOGIN OK', { ip: ip, authorized: authHost.isAuthorized(ip) });
+            res.sendFile(view.landing);
+        } else {
+            log.debug('LOGIN KO', { ip: ip, authorized: false });
+            hostCfg.authenticated = false;
+            res.sendFile(view.login);
+        }
+    } else {
+        res.redirect('/');
+    }
 });
 
 // set new room name and join
 app.get(['/newroom'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../../', 'public/view/newroom.html'));
+    if (hostCfg.protected == true) {
+        let ip = getIP(req);
+        if (allowedIP(ip)) {
+            res.sendFile(view.newRoom);
+        } else {
+            hostCfg.authenticated = false;
+            res.sendFile(view.login);
+        }
+    } else {
+        res.sendFile(view.newRoom);
+    }
+});
+
+// no room name specified to join || direct join
+app.get('/join/', (req, res) => {
+    if (hostCfg.authenticated && Object.keys(req.query).length > 0) {
+        log.debug('Direct Join', req.query);
+        // http://localhost:3010/join?room=test&name=mirotalksfu&audio=1&video=1&notify=1
+        let roomName = req.query.room;
+        let peerName = req.query.name;
+        let peerAudio = req.query.audio;
+        let peerVideo = req.query.video;
+        let notify = req.query.notify;
+        if (roomName && peerName && peerAudio && peerVideo && notify) {
+            return res.sendFile(view.room);
+        }
+    }
+    res.redirect('/');
+});
+
+// join room
+app.get('/join/*', (req, res) => {
+    if (hostCfg.authenticated) {
+        res.sendFile(view.room);
+    } else {
+        res.redirect('/');
+    }
 });
 
 // if not allow video/audio
 app.get(['/permission'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../../', 'public/view/permission.html'));
+    res.sendFile(view.permission);
 });
 
 // privacy policy
 app.get(['/privacy'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../../', 'public/view/privacy.html'));
+    res.sendFile(view.privacy);
 });
 
-// no room name specified to join
-app.get('/join/', (req, res) => {
-    res.redirect('/');
-});
-
-// join to room
-app.get('/join/*', (req, res) => {
-    if (Object.keys(req.query).length > 0) {
-        log.debug('redirect:' + req.url + ' to ' + url.parse(req.url).pathname);
-        res.redirect(url.parse(req.url).pathname);
-    } else {
-        res.sendFile(path.join(__dirname, '../../', 'public/view/Room.html'));
-    }
+// mirotalk about
+app.get(['/about'], (req, res) => {
+    res.sendFile(view.about);
 });
 
 // ####################################################
 // API
 // ####################################################
-
-// Api parse body data as json
-app.use(express.json());
-
-// api docs
-app.use(apiBasePath + '/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // request meeting room endpoint
 app.post(['/api/v1/meeting'], (req, res) => {
@@ -132,9 +236,34 @@ app.post(['/api/v1/meeting'], (req, res) => {
     });
 });
 
+// request join room endpoint
+app.post(['/api/v1/join'], (req, res) => {
+    // check if user was authorized for the api call
+    let host = req.headers.host;
+    let authorization = req.headers.authorization;
+    let api = new ServerApi(host, authorization);
+    if (!api.isAuthorized()) {
+        log.debug('MiroTalk get join - Unauthorized', {
+            header: req.headers,
+            body: req.body,
+        });
+        return res.status(403).json({ error: 'Unauthorized!' });
+    }
+    // setup Join URL
+    let joinURL = api.getJoinURL(req.body);
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ join: joinURL }));
+    // log.debug the output if all done
+    log.debug('MiroTalk get join - Authorized', {
+        header: req.headers,
+        body: req.body,
+        join: joinURL,
+    });
+});
+
 // not match any of page before, so 404 not found
 app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, '../../', 'public/view/404.html'));
+    res.sendFile(view.notFound);
 });
 
 // ####################################################
@@ -151,11 +280,14 @@ async function ngrokStart() {
         let pu1 = data.tunnels[1].public_url;
         let tunnel = pu0.startsWith('https') ? pu0 : pu1;
         log.debug('Listening on', {
+            hostConfig: hostCfg,
             announced_ip: announcedIP,
             server: host,
             tunnel: tunnel,
             api_docs: api_docs,
-            mediasoup_version: mediasoup.version,
+            mediasoup_server_version: mediasoup.version,
+            mediasoup_client_version: mediasoupClient.version,
+            sentry_enabled: sentryEnabled,
         });
     } catch (err) {
         log.error('Ngrok Start error: ', err);
@@ -187,10 +319,13 @@ httpsServer.listen(config.listenPort, () => {
         return;
     }
     log.debug('Listening on', {
+        hostConfig: hostCfg,
         announced_ip: announcedIP,
         server: host,
         api_docs: api_docs,
-        mediasoup_version: mediasoup.version,
+        mediasoup_server_version: mediasoup.version,
+        mediasoup_client_version: mediasoupClient.version,
+        sentry_enabled: sentryEnabled,
     });
 });
 
@@ -379,7 +514,7 @@ io.on('connection', (socket) => {
             const { params } = await roomList.get(socket.room_id).createWebRtcTransport(socket.id);
             callback(params);
         } catch (err) {
-            log.error('Create WebRtc Transport error: ', err);
+            log.error('Create WebRtc Transport error: ', err.message);
             callback({
                 error: err.message,
             });
@@ -409,8 +544,14 @@ io.on('connection', (socket) => {
         log.debug('Produce', {
             kind: kind,
             peer_name: peer_name,
+            peer_id: socket.id,
             producer_id: producer_id,
         });
+
+        // add & monitor producer audio level
+        if (kind === 'audio') {
+            roomList.get(socket.room_id).addProducerToAudioLevelObserver({ producerId: producer_id });
+        }
 
         // peer_info audio Or video ON
         let data = {
@@ -491,6 +632,8 @@ io.on('connection', (socket) => {
         }
 
         roomList.get(socket.room_id).broadCast(socket.id, 'removeMe', removeMeData());
+
+        removeIP(socket);
     });
 
     socket.on('exitRoom', async (_, callback) => {
@@ -512,6 +655,8 @@ io.on('connection', (socket) => {
         }
 
         socket.room_id = null;
+
+        removeIP(socket);
 
         callback('Successfully exited room');
     });
@@ -545,3 +690,20 @@ io.on('connection', (socket) => {
         return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 });
+
+function getIP(req) {
+    return req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+}
+function allowedIP(ip) {
+    return authHost != null && authHost.isAuthorized(ip);
+}
+function removeIP(socket) {
+    if (hostCfg.protected == true) {
+        let ip = socket.handshake.address;
+        if (ip && allowedIP(ip)) {
+            authHost.deleteIP(ip);
+            hostCfg.authenticated = false;
+            log.debug('Remove IP from auth', { ip: ip });
+        }
+    }
+}
