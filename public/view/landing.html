@@ -16,7 +16,7 @@
 
         <!-- Title and Icon -->
 
-        <title>MiroTalk SFU, бесплатные видеозвонки, обмен сообщениями и демонстрация экрана</title>
+        <title>MiroTalk SFU, Free Video Calls, Messaging and Screen Sharing</title>
         <link rel="shortcut icon" href="../images/logo.svg" />
         <link rel="apple-touch-icon" href="../images/logo.svg" />
 
@@ -32,7 +32,7 @@
         />
         <meta
             name="keywords"
-            content="webrtc, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
+            content="webrtc, miro, mediasoup, mediasoup-client, self hosted, voip, sip, real-time communications, chat, messaging, meet, webrtc stun, webrtc turn, webrtc p2p, webrtc sfu, video meeting, video chat, video conference, multi video chat, multi video conference, peer to peer, p2p, sfu, rtc, alternative to, zoom, microsoft teams, google meet, jitsi, meeting"
         />
 
         <!-- https://ogp.me -->
@@ -47,6 +47,7 @@
         <meta property="og:image" content="https://sfu.mirotalk.org/images/mirotalksfu.png" />
 
         <!-- StyleSheet -->
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,600" />
         <link rel="stylesheet" href="../css/landing.css" />
 
@@ -77,12 +78,12 @@
                         <div class="hero-inner">
                             <div class="hero-copy">
                                 <h1 class="hero-title mt-0">
-                                    MiroTalk SFU<br />Бесплатные видеозвонки в режиме реального времени на основе браузера.<br />
-                                    Просто, безопасно, быстро.
+                                    MiroTalk SFU<br />Free browser based real-time video calls.<br />
+                                    Simple, Secure, Fast.
                                 </h1>
                                 <p class="hero-paragraph">
-                                    Начните следующий видеозвонок одним щелчком мыши. Нет загрузки, плагина или входа в систему
-                                     требуется. Просто начните говорить, обмениваться сообщениями и делиться своим экраном.
+                                    Start your next video call with a single click. No download, plug-in, or login is
+                                    required. Just get straight to talking, messaging, and sharing your screen.
                                 </p>
                             </div>
                             <div class="hero-figure anime-element">
@@ -108,8 +109,8 @@
                     <div class="container">
                         <div class="cta-inner section-inner">
                             <h3 class="section-title mt-0">
-                                Выберите название комнаты.<br />
-                                Как насчет этого?
+                                Pick a room name.<br />
+                                How about this one?
                             </h3>
                             <div>
                                 <div class="mb-24">
@@ -119,18 +120,41 @@
                                         <button
                                             id="joinRoomButton"
                                             class="button button-primary pulse"
-                                            onclick="{window.location.href = '/join/' + document.getElementById('roomName').value}"
+                                            onclick="joinRoom()"
                                         >
-                                            Присоединяйтесь к комнате
+                                            Join Room
                                         </button>
                                         <script>
                                             document.getElementById('roomName').onkeyup = (e) => {
                                                 if (e.keyCode === 13) {
                                                     e.preventDefault();
-                                                    document.getElementById('joinRoomButton').click();
+                                                    joinRoom();
                                                 }
                                             };
+                                            function joinRoom() {
+                                                let roomName = document.getElementById('roomName').value;
+                                                window.location.href = '/join/' + roomName;
+                                            }
                                         </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="features section">
+                    <div class="container">
+                        <div class="features-inner section-inner has-bottom-divider">
+                            <h2 style="text-align: center">Our sponsors</h2>
+                            <div class="features-wrap">
+                                <div class="feature text-center is-revealing">
+                                    <div class="feature-inner">
+                                        <div class="feature-icon">
+                                            <a href="https://broadcastx.de/" target="_blank"
+                                                ><img src="../sponsors/BroadcastX.png" alt="BroadcastX"
+                                            /></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -147,11 +171,23 @@
                                 </h2>
                                 <p class="section-paragraph mb-0">
                                     MiroTalk with SFU integrated Server. We engineered a platform with maximum video
-                                    quality lowest latency that makes your calls crystal clear. Compatible with Desktop
-                                    and Mobile devices!
+                                    quality lowest latency that makes your calls crystal clear. Compatible with all
+                                    browsers and platforms!
                                 </p>
                             </div>
+                            <div style="width: 200px; margin: 0 auto">
+                                <a
+                                    href="https://www.digitalocean.com/?refcode=1070207afbb1&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
+                                >
+                                    <img
+                                        class="pulse"
+                                        src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg"
+                                        alt="DigitalOcean Referral Badge"
+                                    />
+                                </a>
+                            </div>
                         </div>
+                        <hr />
                     </div>
 
                     <div class="container">
@@ -188,7 +224,7 @@
                                         </div>
                                         <h4 class="feature-title mt-24">Audio Streaming</h4>
                                         <p class="text-sm mb-0">
-                                            Echo cancellation and noise suppression that makes your audio crystal clear.
+                                            Echo cancellation and noise suppression that make your audio crystal clear.
                                         </p>
                                     </div>
                                 </div>
@@ -199,7 +235,7 @@
                                         </div>
                                         <h4 class="feature-title mt-24">Chat</h4>
                                         <p class="text-sm mb-0">
-                                            Chat with others in meeting with integrated emoji picker to show you
+                                            Chat with others in meeting with integrated emoji picker to show your
                                             feeling.
                                         </p>
                                     </div>
@@ -211,8 +247,8 @@
                                         </div>
                                         <h4 class="feature-title mt-24">Recording meeting</h4>
                                         <p class="text-sm mb-0">
-                                            Record your Screen, Video and Audio on Your browser Blobs. Save it for use
-                                            it in future or to share with others.
+                                            Record your Screen, Video, and Audio on Your browser Blob. Save it for using
+                                            it in the future or to share with others.
                                         </p>
                                     </div>
                                 </div>
@@ -235,7 +271,7 @@
                                         </div>
                                         <h4 class="feature-title mt-24">File Sharing</h4>
                                         <p class="text-sm mb-0">
-                                            Share any types of files to all participants in the meeting.
+                                            Share any types of files with all participants in the meeting.
                                         </p>
                                     </div>
                                 </div>
@@ -246,8 +282,8 @@
                                         </div>
                                         <h4 class="feature-title mt-24">Total privacy</h4>
                                         <p class="text-sm mb-0">
-                                            Data stays between you and your participants. MiroTalk SFU don't collect or
-                                            share personal information.
+                                            Data stays between you and your participants. MiroTalk SFU doesn't collect
+                                            or share personal information.
                                         </p>
                                     </div>
                                 </div>
@@ -258,7 +294,7 @@
                                         </div>
                                         <h4 class="feature-title mt-24">Maximum security</h4>
                                         <p class="text-sm mb-0">
-                                            Thanks to WebRTC all the media streams are encrypted using Secure Real-time
+                                            Thanks to WebRTC, all the media streams are encrypted using Secure Real-time
                                             Transport Protocol (SRTP).
                                         </p>
                                     </div>
@@ -280,6 +316,7 @@
                             Full Stack Developer
                             <br />
                         </div>
+                        <hr />
                     </div>
                 </section>
             </main>
@@ -305,6 +342,9 @@
                             </a>
                         </div>
                         <ul class="footer-links list-reset">
+                            <li>
+                                <a href="/about">About</a>
+                            </li>
                             <li>
                                 <a href="/privacy">Privacy Policy</a>
                             </li>
@@ -338,14 +378,25 @@
                                     </svg>
                                 </a>
                             </li>
+                            <li>
+                                <a target="_blank" href="mailto:miroslav.pejic.85@gmail.com">
+                                    <span class="screen-reader-text">Google</span>
+                                    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.9 7v2.4H12c-.2 1-1.2 3-4 3-2.4 0-4.3-2-4.3-4.4 0-2.4 2-4.4 4.3-4.4 1.4 0 2.3.6 2.8 1.1l1.9-1.8C11.5 1.7 9.9 1 8 1 4.1 1 1 4.1 1 8s3.1 7 7 7c4 0 6.7-2.8 6.7-6.8 0-.5 0-.8-.1-1.2H7.9z"
+                                            fill="#0270D7"
+                                        />
+                                    </svg>
+                                </a>
+                            </li>
                         </ul>
-                        <div class="footer-copyright">&copy; 2021 MiroTalk SFU, all rights reserved</div>
+                        <div class="footer-copyright">&copy; 2022 MiroTalk SFU, all rights reserved</div>
                     </div>
                 </div>
             </footer>
         </div>
 
         <script src="../js/landing.js"></script>
-        <script src="../js/newroom.js"></script>
+        <script src="../js/newRoom.js"></script>
     </body>
 </html>
