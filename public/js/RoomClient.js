@@ -1189,10 +1189,10 @@ class RoomClient {
             imageAlt: 'mirotalksfu-leave-room',
             imageUrl: image.exit,
             position: 'center',
-            title: 'Leave this room?',
+            title: 'Выйти из этой конференции?',
             showDenyButton: true,
-            confirmButtonText: `Yes`,
-            denyButtonText: `No`,
+            confirmButtonText: `Да`,
+            denyButtonText: `Нет`,
             showClass: {
                 popup: 'animate__animated animate__fadeInDown',
             },
