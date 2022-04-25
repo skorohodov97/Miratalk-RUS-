@@ -1499,7 +1499,7 @@ async function getParticipantsTable(peers) {
         if (rc.peer_id === peer_id) {
             table += `
             <tr id='${peer_name}'>
-                <td><img src='${avatarImg}'>&nbsp;&nbsp;${peer_name} (me)</td>
+                <td><img src='${avatarImg}'>&nbsp;&nbsp;${peer_name} (я)</td>
                 <td><button>${peer_audio}</button></td>
                 <td><button>${peer_video}</button></td>
                 <td><button>${peer_hand}</button></td>
