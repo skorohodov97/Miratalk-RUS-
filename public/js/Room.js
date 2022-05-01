@@ -9,7 +9,7 @@ const swalImageUrl = '../images/pricing-illustration.svg';
 
 const url = {
     ipLookup: 'https://extreme-ip-lookup.com/json/?key=demo2',
-    survey: 'https://localhost:3010/newroom',
+    survey: 'https://www.questionpro.com/t/AUs7VZq02P',
 };
 
 const _PEER = {
@@ -22,6 +22,7 @@ const _PEER = {
     ejectPeer: '<i class="fas fa-times"></i>',
     sendFile: '<i class="fas fa-upload"></i>',
     sendMsg: '<i class="fas fa-paper-plane"></i>',
+    sendYouTube: '<i class="fab fa-youtube"></i>',
 };
 
 const surveyActive = true;
@@ -41,9 +42,11 @@ let peer_info = null;
 let isEnumerateDevices = false;
 let isAudioAllowed = false;
 let isVideoAllowed = false;
+let isAudioVideoAllowed = false;
 let isScreenAllowed = false;
 let initAudioButton = null;
 let initVideoButton = null;
+let initAudioVideoButton = null;
 
 let recTimer = null;
 let recElapsedTime = null;
@@ -64,48 +67,48 @@ const socket = io();
 
 function initClient() {
     if (!DetectRTC.isMobileDevice) {
-        setTippy('shareButton', 'Поделиться', 'right');
-        setTippy('startAudioButton', 'Включить звук', 'right');
-        setTippy('stopAudioButton', 'Выклучить звук', 'right');
-        setTippy('startVideoButton', 'Включить камеру', 'right');
-        setTippy('stopVideoButton', 'Выключить камеру', 'right');
-        setTippy('startScreenButton', 'Включить трасляцию экрана', 'right');
-        setTippy('stopScreenButton', 'Выключить трасляцию экрана', 'right');
-        setTippy('swapCameraButton', 'Поменять камеру', 'right');
-        setTippy('chatButton', 'Открыть чат', 'right');
-        setTippy('whiteboardButton', 'Открыть доску', 'right');
-        setTippy('settingsButton', 'Настройки', 'right');
-        setTippy('exitButton', 'Выйти из конференции', 'right');
-        setTippy('tabDevicesBtn', 'Устройства', 'top');
-        setTippy('tabRecordingBtn', 'Запись', 'top');
-        setTippy('tabRoomBtn', 'Зал', 'top');
+        setTippy('shareButton', 'Share room', 'right');
+        setTippy('startAudioButton', 'Start the audio', 'right');
+        setTippy('stopAudioButton', 'Stop the audio', 'right');
+        setTippy('startVideoButton', 'Start the video', 'right');
+        setTippy('stopVideoButton', 'Stop the video', 'right');
+        setTippy('startScreenButton', 'Start screen share', 'right');
+        setTippy('stopScreenButton', 'Stop screen share', 'right');
+        setTippy('swapCameraButton', 'Swap the camera', 'right');
+        setTippy('chatButton', 'Toggle the chat', 'right');
+        setTippy('whiteboardButton', 'Toggle the whiteboard', 'right');
+        setTippy('settingsButton', 'Toggle the settings', 'right');
+        setTippy('exitButton', 'Leave room', 'right');
+        setTippy('tabDevicesBtn', 'Devices', 'top');
+        setTippy('tabRecordingBtn', 'Recording', 'top');
+        setTippy('tabRoomBtn', 'Room', 'top');
         setTippy('tabYoutubeBtn', 'YouTube', 'top');
-        setTippy('tabAspectBtn', 'Расширение', 'top');
-        setTippy('tabStylingBtn', 'Тема', 'top');
-        setTippy('wbBackgroundColorEl', 'Цвет фона', 'top');
-        setTippy('wbDrawingColorEl', 'Цвет рисунка', 'top');
-        setTippy('whiteboardPencilBtn', 'Режим рисования', 'top');
-        setTippy('whiteboardObjectBtn', 'Объектный режим', 'top');
-        setTippy('whiteboardUndoBtn', 'Отменить', 'top');
-        setTippy('whiteboardRedoBtn', 'Повторить', 'top');
-        setTippy('whiteboardImgFileBtn', 'Добавить  изображене', 'top');
-        setTippy('whiteboardImgUrlBtn', 'Добавить URL', 'top');
-        setTippy('whiteboardTextBtn', 'Добавить текст', 'top');
-        setTippy('whiteboardLineBtn', 'Добавить строку', 'top');
-        setTippy('whiteboardRectBtn', 'Добавить прямоугольник', 'top');
-        setTippy('whiteboardCircleBtn', 'Добавить круг', 'top');
-        setTippy('whiteboardSaveBtn', 'Сохранять', 'top');
-        setTippy('whiteboardEraserBtn', 'Ластик', 'top');
-        setTippy('whiteboardCleanBtn', 'Очистить', 'top');
-        setTippy('participantsRefreshBtn', 'Обновить', 'top');
-        setTippy('chatMessage', 'Нажмите Enter, чтобы отправить', 'top-start');
-        setTippy('chatSendButton', 'Отправлять', 'top');
-        setTippy('chatSpeechStartButton', 'Начать распознавание речи', 'top');
-        setTippy('chatSpeechStopButton', 'Остановить распознавание речи', 'top');
-        setTippy('chatEmojiButton', 'Эмодзи', 'top');
-        setTippy('chatCleanButton', 'Очистить', 'bottom');
-        setTippy('chatSaveButton', 'Сохранить', 'bottom');
-        setTippy('sessionTime', 'Время сеанса', 'right');
+        setTippy('tabAspectBtn', 'Aspect', 'top');
+        setTippy('tabStylingBtn', 'Styling', 'top');
+        setTippy('wbBackgroundColorEl', 'Background color', 'top');
+        setTippy('wbDrawingColorEl', 'Drawing color', 'top');
+        setTippy('whiteboardPencilBtn', 'Drawing mode', 'top');
+        setTippy('whiteboardObjectBtn', 'Object mode', 'top');
+        setTippy('whiteboardUndoBtn', 'Undo', 'top');
+        setTippy('whiteboardRedoBtn', 'Redo', 'top');
+        setTippy('whiteboardImgFileBtn', 'Add image file', 'top');
+        setTippy('whiteboardImgUrlBtn', 'Add image url', 'top');
+        setTippy('whiteboardTextBtn', 'Add text', 'top');
+        setTippy('whiteboardLineBtn', 'Add line', 'top');
+        setTippy('whiteboardRectBtn', 'Add rectangle', 'top');
+        setTippy('whiteboardCircleBtn', 'Add circle', 'top');
+        setTippy('whiteboardSaveBtn', 'Save', 'top');
+        setTippy('whiteboardEraserBtn', 'Eraser', 'top');
+        setTippy('whiteboardCleanBtn', 'Clear', 'top');
+        setTippy('participantsRefreshBtn', 'Refresh', 'top');
+        setTippy('chatMessage', 'Press enter to send', 'top-start');
+        setTippy('chatSendButton', 'Send', 'top');
+        setTippy('chatSpeechStartButton', 'Start speech recognition', 'top');
+        setTippy('chatSpeechStopButton', 'Stop speech recognition', 'top');
+        setTippy('chatEmojiButton', 'Emoji', 'top');
+        setTippy('chatCleanButton', 'Clean', 'bottom');
+        setTippy('chatSaveButton', 'Save', 'bottom');
+        setTippy('sessionTime', 'Session time', 'right');
     }
     setupWhiteboard();
     initEnumerateDevices();
@@ -297,7 +300,6 @@ function whoAreYou() {
     if (peer_name) {
         checkMedia();
         getPeerInfo();
-        notify ? shareRoom() : sound('joined');
         joinRoom(peer_name, room_id);
         return;
     }
@@ -306,14 +308,17 @@ function whoAreYou() {
         allowOutsideClick: false,
         allowEscapeKey: false,
         background: swalBackground,
+        imageAlt: 'mirotalksfu-username',
+        imageUrl: image.username,
         input: 'text',
-        inputPlaceholder: 'Введите ваше имя',
+        inputPlaceholder: 'Enter your name',
         html: `<br />
         <div style="overflow: hidden;">
             <button id="initAudioButton" class="fas fa-microphone" onclick="handleAudio(event)"></button>
             <button id="initVideoButton" class="fas fa-video" onclick="handleVideo(event)"></button>
+            <button id="initAudioVideoButton" class="fas fa-eye" onclick="handleAudioVideo(event)"></button>
         </div>`,
-        confirmButtonText: `Присоединиться к встрече`,
+        confirmButtonText: `Join meeting`,
         showClass: {
             popup: 'animate__animated animate__fadeInDown',
         },
@@ -321,24 +326,26 @@ function whoAreYou() {
             popup: 'animate__animated animate__fadeOutUp',
         },
         inputValidator: (name) => {
-            if (!name) return 'Пожалуйста, введите Ваше имя';
+            if (!name) return 'Please enter your name';
             peer_name = name;
         },
     }).then(() => {
         getPeerInfo();
-        notify ? shareRoom() : sound('joined');
         joinRoom(peer_name, room_id);
     });
 
     if (!DetectRTC.isMobileDevice) {
         setTippy('initAudioButton', 'Toggle the audio', 'left');
         setTippy('initVideoButton', 'Toggle the video', 'right');
+        setTippy('initAudioVideoButton', 'Toggle the audio & video', 'right');
     }
 
     initAudioButton = document.getElementById('initAudioButton');
     initVideoButton = document.getElementById('initVideoButton');
-    if (!isAudioAllowed) initAudioButton.className = 'hidden';
-    if (!isVideoAllowed) initVideoButton.className = 'hidden';
+    initAudioVideoButton = document.getElementById('initAudioVideoButton');
+    if (!isAudioAllowed) hide(initAudioButton);
+    if (!isVideoAllowed) hide(initVideoButton);
+    if (!isAudioAllowed || !isVideoAllowed) hide(initAudioVideoButton);
 }
 
 function handleAudio(e) {
@@ -352,6 +359,25 @@ function handleVideo(e) {
     isVideoAllowed = isVideoAllowed ? false : true;
     e.target.className = 'fas fa-video' + (isVideoAllowed ? '' : '-slash');
     setColor(e.target, isVideoAllowed ? 'white' : 'red');
+    setColor(startVideoButton, isVideoAllowed ? 'white' : 'red');
+}
+
+function handleAudioVideo(e) {
+    isAudioAllowed = isAudioAllowed ? false : true;
+    isVideoAllowed = isVideoAllowed ? false : true;
+    isAudioVideoAllowed = isAudioAllowed && isVideoAllowed;
+    if (isAudioVideoAllowed) {
+        initAudioButton.className = 'fas fa-microphone';
+        initVideoButton.className = 'fas fa-video';
+    } else {
+        hide(initAudioButton);
+        hide(initVideoButton);
+    }
+    e.target.className = 'fas fa-eye' + (isAudioVideoAllowed ? '' : '-slash');
+    setColor(e.target, isAudioVideoAllowed ? 'white' : 'red');
+    setColor(initAudioButton, isAudioAllowed ? 'white' : 'red');
+    setColor(initVideoButton, isVideoAllowed ? 'white' : 'red');
+    setColor(startAudioButton, isAudioAllowed ? 'white' : 'red');
     setColor(startVideoButton, isVideoAllowed ? 'white' : 'red');
 }
 
@@ -392,7 +418,7 @@ async function shareRoom(useNavigator = false) {
         Swal.fire({
             background: swalBackground,
             position: 'center',
-            title: '<strong>Привет ' + peer_name + '</strong>',
+            title: '<strong>Hello ' + peer_name + '</strong>',
             html:
                 `
             <br/>
@@ -400,15 +426,15 @@ async function shareRoom(useNavigator = false) {
                 <canvas id="qrRoom"></canvas>
             </div>
             <br/><br/>
-            <p style="background:transparent; color:white;">Поделитесь этой встречей, пригласите других присоединиться.</p>
+            <p style="background:transparent; color:white;">Invite others to join. Share this meeting link.</p>
             <p style="background:transparent; color:rgb(8, 189, 89);">` +
                 RoomURL +
                 `</p>`,
             showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: `Скопировать URL встречи`,
-            denyButtonText: `Пригласить по электронной почте`,
-            cancelButtonText: `Закрыть`,
+            confirmButtonText: `Copy URL`,
+            denyButtonText: `Email invite`,
+            cancelButtonText: `Close`,
             showClass: {
                 popup: 'animate__animated animate__fadeInUp',
             },
@@ -487,6 +513,7 @@ function joinRoom(peer_name, room_id) {
             roomIsReady,
         );
         handleRoomClientEvents();
+        notify ? shareRoom() : sound('joined');
     }
 }
 
@@ -697,20 +724,24 @@ function handleButtons() {
         rc.updatePeerInfo(peer_name, rc.peer_id, 'hand', false);
     };
     startAudioButton.onclick = () => {
+        setAudioButtonsDisabled(true);
         rc.produce(RoomClient.mediaType.audio, microphoneSelect.value);
         rc.updatePeerInfo(peer_name, rc.peer_id, 'audio', true);
         // rc.resumeProducer(RoomClient.mediaType.audio);
     };
     stopAudioButton.onclick = () => {
+        setAudioButtonsDisabled(true);
         rc.closeProducer(RoomClient.mediaType.audio);
         rc.updatePeerInfo(peer_name, rc.peer_id, 'audio', false);
         // rc.pauseProducer(RoomClient.mediaType.audio);
     };
     startVideoButton.onclick = () => {
+        setVideoButtonsDisabled(true);
         rc.produce(RoomClient.mediaType.video, videoSelect.value);
         // rc.resumeProducer(RoomClient.mediaType.video);
     };
     stopVideoButton.onclick = () => {
+        setVideoButtonsDisabled(true);
         rc.closeProducer(RoomClient.mediaType.video);
         // rc.pauseProducer(RoomClient.mediaType.video);
     };
@@ -721,10 +752,10 @@ function handleButtons() {
         rc.closeProducer(RoomClient.mediaType.screen);
     };
     fileShareButton.onclick = () => {
-        rc.selectFileToShare(rc.peer_id);
+        rc.selectFileToShare(rc.peer_id, true);
     };
     youTubeShareButton.onclick = () => {
-        rc.youTubeShareVideo();
+        rc.youTubeShareVideo('all');
     };
     youTubeCloseBtn.onclick = () => {
         rc.closeYouTube(true);
@@ -930,6 +961,7 @@ function handleRoomClientEvents() {
         hide(startAudioButton);
         show(stopAudioButton);
         setColor(startAudioButton, 'red');
+        setAudioButtonsDisabled(false);
     });
     rc.on(RoomClient.EVENTS.pauseAudio, () => {
         console.log('Room Client pause audio');
@@ -945,12 +977,14 @@ function handleRoomClientEvents() {
         console.log('Room Client stop audio');
         hide(stopAudioButton);
         show(startAudioButton);
+        setAudioButtonsDisabled(false);
     });
     rc.on(RoomClient.EVENTS.startVideo, () => {
         console.log('Room Client start video');
         hide(startVideoButton);
         show(stopVideoButton);
         setColor(startVideoButton, 'red');
+        setVideoButtonsDisabled(false);
     });
     rc.on(RoomClient.EVENTS.pauseVideo, () => {
         console.log('Room Client pause video');
@@ -963,9 +997,10 @@ function handleRoomClientEvents() {
         show(stopVideoButton);
     });
     rc.on(RoomClient.EVENTS.stopVideo, () => {
-        console.log('Room Client stop audio');
+        console.log('Room Client stop video');
         hide(stopVideoButton);
         show(startVideoButton);
+        setVideoButtonsDisabled(false);
     });
     rc.on(RoomClient.EVENTS.startScreen, () => {
         console.log('Room Client start screen');
@@ -1050,6 +1085,16 @@ function showButtons() {
         control.style.display = 'none';
         isButtonsVisible = false;
     }, 10000);
+}
+
+function setAudioButtonsDisabled(disabled) {
+    startAudioButton.disabled = disabled;
+    stopAudioButton.disabled = disabled;
+}
+
+function setVideoButtonsDisabled(disabled) {
+    startVideoButton.disabled = disabled;
+    stopVideoButton.disabled = disabled;
 }
 
 // ####################################################
@@ -1471,6 +1516,7 @@ async function getParticipantsTable(peers) {
         <th></th>
         <th></th>
         <th></th>
+        <th></th>
     </tr>`;
 
     table += `
@@ -1479,8 +1525,9 @@ async function getParticipantsTable(peers) {
         <td><button id="muteAllButton" onclick="rc.peerAction('me','${rc.peer_id}','mute',true,true)">${_PEER.audioOff}</button></td>
         <td><button id="hideAllButton" onclick="rc.peerAction('me','${rc.peer_id}','hide',true,true)">${_PEER.videoOff}</button></td>
         <td></td>
-        <td><button id="sendAllButton" onclick="rc.selectFileToShare('${rc.peer_id}')">${_PEER.sendFile}</button></td>
+        <td><button id="sendAllButton" onclick="rc.selectFileToShare('${rc.peer_id}', true)">${_PEER.sendFile}</button></td>
         <td><button id="sendMessageToAll" onclick="rc.sendMessageTo('all')">${_PEER.sendMsg}</button></td>
+        <td><button id="sendYouTubeAll" onclick="rc.youTubeShareVideo('all');">${_PEER.sendYouTube}</button></td>
         <td><button id="ejectAllButton" onclick="rc.peerAction('me','${rc.peer_id}','eject',true,true)">${_PEER.ejectPeer}</button></td>
     </tr>
     `;
@@ -1499,10 +1546,11 @@ async function getParticipantsTable(peers) {
         if (rc.peer_id === peer_id) {
             table += `
             <tr id='${peer_name}'>
-                <td><img src='${avatarImg}'>&nbsp;&nbsp;${peer_name} (я)</td>
+                <td><img src='${avatarImg}'>&nbsp;&nbsp;${peer_name} (me)</td>
                 <td><button>${peer_audio}</button></td>
                 <td><button>${peer_video}</button></td>
                 <td><button>${peer_hand}</button></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1515,8 +1563,9 @@ async function getParticipantsTable(peers) {
                 <td><button id='${peer_id}___pAudio' onclick="rc.peerAction('me',this.id,'mute')">${peer_audio}</button></td>
                 <td><button id='${peer_id}___pVideo' onclick="rc.peerAction('me',this.id,'hide')">${peer_video}</button></td>
                 <td><button>${peer_hand}</button></td>
-                <td><button id='${peer_id}' onclick="rc.selectFileToShare(this.id, false)">${peer_sendFile}</button></td>
+                <td><button id='${peer_id}' onclick="rc.selectFileToShare(this.id)">${peer_sendFile}</button></td>
                 <td><button id="sendMessageTo" onclick="rc.sendMessageTo('${peer_id}')">${peer_sendMsg}</button></td>
+                <td><button id="sendYouTubeTo" onclick="rc.youTubeShareVideo('${peer_id}');">${_PEER.sendYouTube}</button></td>
                 <td><button id='${peer_id}___pEject' onclick="rc.peerAction('me',this.id,'eject')">${peer_eject}</button></td>
             </tr>
             `;
@@ -1654,7 +1703,7 @@ function showAbout() {
             <b>Open Source</b> project on
             <a href="https://github.com/miroslavpejic85/mirotalksfu" target="_blank"><br/><br />
             <img alt="mirotalksfu-github" src="../images/github.png"></a><br/><br />
-            <button class="far fa-heart pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"> Sponsor</button>
+            <button class="pulsate" onclick="window.open('https://github.com/sponsors/miroslavpejic85?o=esb')"><i class="fas fa-heart"></i> Sponsor</button>
             <br /><br />
             Contact: <a href="https://www.linkedin.com/in/miroslav-pejic-976a07101/" target="_blank"> Miroslav Pejic</a>
         </div>
