@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <!-- https://github.com/mikecao/umami -->
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZRF9TVSZ0J"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-
-            gtag('config', 'G-ZRF9TVSZ0J');
-        </script>
+        <script
+            async
+            defer
+            data-website-id="28098c62-a100-44a1-8f03-234b3f0a8194"
+            src="https://stats.mirotalk.org/umami.js"
+        ></script>
 
         <!-- Title and Icon -->
 
@@ -49,6 +45,10 @@
         <link rel="stylesheet" href="../css/Room.css" />
         <link rel="stylesheet" href="../css/VideoGrid.css" />
 
+        <!-- https://cdnjs.com/libraries/font-awesome -->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
         <!-- https://animate.style 4 using for swal fadeIn-Out -->
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -77,11 +77,10 @@
         <script src="../js/RoomClient.js"></script>
         <script src="../js/SpeechRec.js"></script>
         <script src="../js/VideoGrid.js"></script>
-        <script src="https://kit.fontawesome.com/d2f1016e6f.js" crossorigin="anonymous"></script>
         <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/500/fabric.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8"></script>
         <script src="https://unpkg.com/emoji-picker-element@1" type="module"></script>
         <script src="https://unpkg.com/@popperjs/core@2"></script>
         <script src="https://unpkg.com/tippy.js@6"></script>
@@ -90,10 +89,10 @@
         <noscript>You need to enable JavaScript to run this app.</noscript>
 
         <div id="loadingDiv" class="center pulsate">
-            <h1>Загрузка...</h1>
+            <h1>Loading...</h1>
             <pre>
-Пожалуйста, разрешите камеру или микрофон
-доступ к использованию этого приложения.
+Please allow the camera or microphone
+access to use this app.
             </pre>
         </div>
 
@@ -131,15 +130,15 @@
                 <div id="tabDevices" class="tabcontent">
                     <br />
                     <i class="fas fa-video"></i>
-                    <p>Камера:</p>
+                    <p>Video:</p>
                     <select id="videoSelect" class="form-select text-light bg-dark"></select>
                     <br />
                     <i class="fas fa-microphone"></i>
-                    <p>Микрофон:</p>
+                    <p>Microphone:</p>
                     <select id="microphoneSelect" class="form-select text-light bg-dark"></select>
                     <br />
                     <i class="fas fa-volume-up"></i>
-                    <p>Воспроизведение:</p>
+                    <p>Speaker:</p>
                     <select id="speakerSelect" class="form-select text-light bg-dark"></select>
                     <br />
                 </div>
@@ -148,40 +147,40 @@
                     <br />
                     <button id="fullScreenButton" class="hidden">
                         <i class="fas fa-expand-alt"></i>
-                        <p>Полноэкранный режим</p>
+                        <p>Full screen mode</p>
                     </button>
                     <br />
                     <button id="raiseHandButton" class="hidden">
                         <i class="fas fa-hand-paper"></i>
-                        <p>Поднять руку</p>
+                        <p>Raise hand</p>
                     </button>
                     <button id="lowerHandButton" class="hidden">
                         <i class="fas fa-hand-paper"></i>
-                        <p>Опустить руку</p>
+                        <p>Lower hand</p>
                     </button>
                     <br />
                     <button id="fileShareButton" class="hidden">
                         <i class="fas fa-folder-open"></i>
-                        <p>Поделиться файлом</p>
+                        <p>File sharing</p>
                     </button>
                     <br />
                     <button id="participantsButton" class="hidden">
                         <i class="fas fa-users"></i>
-                        <p>Участники</p>
+                        <p>Participants</p>
                     </button>
                     <br />
                     <button id="lockRoomButton" class="hidden">
                         <i class="fas fa-lock-open"></i>
-                        <p>Закрыть доступ</p>
+                        <p>Lock room</p>
                     </button>
                     <button id="unlockRoomButton" class="hidden">
                         <i class="fas fa-lock"></i>
-                        <p>Открыть доступ</p>
+                        <p>Unlock room</p>
                     </button>
                     <br />
                     <button id="aboutButton" class="hidden">
                         <i class="fas fa-question"></i>
-                        <p>Дополнительная информация</p>
+                        <p>About</p>
                     </button>
                     <br />
                     <button id="sessionTimeButton">
@@ -194,20 +193,20 @@
                     <br />
                     <button id="startRecButton" class="hidden">
                         <i class="fas fa-record-vinyl"></i>
-                        <p>Начать запись</p>
+                        <p>Start recording</p>
                     </button>
                     <button id="stopRecButton" class="hidden">
                         <i class="fas fa-stop-circle"></i>
-                        <p>Прекратить запись</p>
+                        <p>Stop recording</p>
                     </button>
                     <br />
                     <button id="pauseRecButton" class="hidden">
                         <i class="far fa-pause-circle"></i>
-                        <p>Приостановить запись</p>
+                        <p>Pause recording</p>
                     </button>
                     <button id="resumeRecButton" class="hidden">
                         <i class="far fa-play-circle"></i>
-                        <p>Возобновить запись</p>
+                        <p>Resume recording</p>
                     </button>
                     <br />
                     <p id="recordingStatus">🔴 REC 0s</p>
@@ -218,19 +217,19 @@
                     <br />
                     <button id="youTubeShareButton">
                         <i class="fab fa-youtube"></i>
-                        <p>Поделиться на YouTube</p>
+                        <p>Share YouTube</p>
                     </button>
                     <br />
                     <button id="youTubeCloseBtn" class="hidden">
                         <i class="fas fa-times"></i>
-                        <p>Закрыть YouTube</p>
+                        <p>Close YouTube</p>
                     </button>
                     <br />
                 </div>
 
                 <div id="tabAspect" class="tabcontent">
                     <br />
-                    <p>Расширение:</p>
+                    <p>Aspect ratio:</p>
                     <br />
                     <select id="BtnsAspectRatio" class="form-select text-light bg-dark">
                         <option value="0">default</option>
@@ -240,32 +239,32 @@
                         <option value="4">1:2</option>
                     </select>
                     <br />
-                    <p>Показ видео:</p>
+                    <p>Video Object fit:</p>
                     <br />
                     <select id="BtnVideoObjectFit" class="form-select text-light bg-dark">
-                        <option value="fill">растянуть</option>
-                        <option value="contain">подогнать</option>
-                        <option value="cover">на весь экран</option>
-                        <option value="scale-down">уменьшенное</option>
-                        <option value="none">нет</option>
+                        <option value="fill">fill</option>
+                        <option value="contain">contain</option>
+                        <option value="cover">cover</option>
+                        <option value="scale-down">scale-down</option>
+                        <option value="none">none</option>
                     </select>
                     <br />
                 </div>
 
                 <div id="tabStyling" class="tabcontent">
                     <br />
-                    <p>Тема:</p>
+                    <p>Theme:</p>
                     <br />
                     <select id="selectTheme" class="form-select text-light bg-dark">
-                        <option value="dark">⚫ &nbsp;Темная</option>
-                        <option value="grey">⚪ &nbsp;Светлая</option>
+                        <option value="dark">⚫ &nbsp;Dark</option>
+                        <option value="grey">⚪ &nbsp;Grey</option>
                     </select>
                     <br />
-                    <p>Панель:</p>
+                    <p>Buttons bar:</p>
                     <br />
                     <select id="BtnsBarPosition" class="form-select text-light bg-dark">
-                        <option value="vertical">Вертикально</option>
-                        <option value="horizontal">Горизонтально</option>
+                        <option value="vertical">Vertical</option>
+                        <option value="horizontal">Horizontal</option>
                     </select>
                     <br />
                 </div>
@@ -282,7 +281,7 @@
             <div id="sendFileInfo"></div>
             <div id="sendFilePercentage"></div>
             <progress id="sendProgress" max="0" value="0"></progress>
-            <button id="sendAbortBtn" class="fas fa-stop-circle">&nbsp; Abort</button>
+            <button id="sendAbortBtn"><i class="fas fa-stop-circle"></i>&nbsp; Abort</button>
         </div>
 
         <div id="receiveFileDiv" class="fadein center">
@@ -295,7 +294,7 @@
             <div id="receiveFileInfo"></div>
             <div id="receiveFilePercentage"></div>
             <progress id="receiveProgress" max="0" value="0"></progress>
-            <button id="receiveHideBtn" class="fas fa-eye-slash">&nbsp; Hide</button>
+            <button id="receiveHideBtn"><i class="fas fa-eye-slash"></i>&nbsp; Hide</button>
         </div>
 
         <section id="participants" class="fadein center hidden">
@@ -342,7 +341,7 @@
         <section id="chatRoom" class="chat-room center fadein">
             <section id="msger" class="msger">
                 <header id="chatHeader" class="chat-header">
-                    <div class="chat-header-title"><i class="fas fa-comment-alt"></i> Чат</div>
+                    <div class="chat-header-title"><i class="fas fa-comment-alt"></i> Chat</div>
                     <div class="chat-header-options">
                         <button id="chatCleanButton" class="fas fa-trash"></button>
                         <button id="chatSaveButton" class="fas fa-save"></button>
@@ -357,7 +356,7 @@
                         id="chatMessage"
                         class="chat-msger-input"
                         type="text"
-                        placeholder="💬 Напишите сообщение..."
+                        placeholder="💬 Enter your message..."
                     />
                     <button id="chatEmojiButton" class="hidden">
                         <i class="fas fa-smile"></i>
