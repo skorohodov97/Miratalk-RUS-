@@ -136,7 +136,8 @@ app.get(['/login'], (req, res) => {
     if (hostCfg.protected == true) {
         let ip = getIP(req);
         log.debug(`Request login to host from: ${ip}`, req.query);
-        if (req.query.username == hostCfg.username && req.query.password == hostCfg.password) {
+        const { username, password } = req.query;
+        if (username == hostCfg.username && password == hostCfg.password) {
             hostCfg.authenticated = true;
             authHost = new Host(ip, true);
             log.debug('LOGIN OK', { ip: ip, authorized: authHost.isAuthorized(ip) });
@@ -171,12 +172,8 @@ app.get('/join/', (req, res) => {
     if (hostCfg.authenticated && Object.keys(req.query).length > 0) {
         log.debug('Direct Join', req.query);
         // http://localhost:3010/join?room=test&name=mirotalksfu&audio=1&video=1&notify=1
-        let roomName = req.query.room;
-        let peerName = req.query.name;
-        let peerAudio = req.query.audio;
-        let peerVideo = req.query.video;
-        let notify = req.query.notify;
-        if (roomName && peerName && peerAudio && peerVideo && notify) {
+        const { room, name, audio, video, notify } = req.query;
+        if (room && name && audio && video && notify) {
             return res.sendFile(view.room);
         }
     }
@@ -279,7 +276,7 @@ async function ngrokStart() {
         let pu0 = data.tunnels[0].public_url;
         let pu1 = data.tunnels[1].public_url;
         let tunnel = pu0.startsWith('https') ? pu0 : pu1;
-        log.debug('Listening on', {
+        log.info('Listening on', {
             hostConfig: hostCfg,
             announced_ip: announcedIP,
             server: host,
@@ -300,7 +297,7 @@ async function ngrokStart() {
 // ####################################################
 
 httpsServer.listen(config.listenPort, () => {
-    log.debug(
+    log.info(
         `%c
 
 	███████╗██╗ ██████╗ ███╗   ██╗      ███████╗███████╗██████╗ ██╗   ██╗███████╗██████╗ 
@@ -448,7 +445,11 @@ io.on('connection', (socket) => {
 
     socket.on('youTubeAction', (data) => {
         log.debug('YouTube: ', data);
-        roomList.get(socket.room_id).broadCast(socket.id, 'youTubeAction', data);
+        if (data.peer_id == 'all') {
+            roomList.get(socket.room_id).broadCast(socket.id, 'youTubeAction', data);
+        } else {
+            roomList.get(socket.room_id).sendTo(data.peer_id, 'youTubeAction', data);
+        }
     });
 
     socket.on('wbCanvasToJson', (data) => {
