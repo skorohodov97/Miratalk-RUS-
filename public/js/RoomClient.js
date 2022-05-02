@@ -801,7 +801,7 @@ class RoomClient {
         p = document.createElement('p');
         p.id = this.peer_id + '__name';
         p.className = html.userName;
-        p.innerHTML = '👤 &nbsp;' + this.peer_name + ' (me)';
+        p.innerHTML = '👤 &nbsp;' + this.peer_name + ' (я)';
         i = document.createElement('i');
         i.id = this.peer_id + '__hand';
         i.className = html.userHand;
