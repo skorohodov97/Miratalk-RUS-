@@ -1172,7 +1172,7 @@ class RoomClient {
         p = document.createElement('p');
         p.id = peer_id + '__name';
         p.className = html.userName;
-        p.innerHTML = '👤 &nbsp;' + peer_name + (remotePeer ? '' : ' (me) ');
+        p.innerHTML = '👤 &nbsp;' + peer_name + (remotePeer ? '' : ' (я) ');
         h = document.createElement('i');
         h.id = peer_id + '__hand';
         h.className = html.userHand;
