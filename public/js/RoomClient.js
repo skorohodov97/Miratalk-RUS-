@@ -1087,14 +1087,14 @@ class RoomClient {
                 handleAspectRatio();
                 console.log('[addConsumer] Video-element-count', this.videoMediaContainer.childElementCount);
                 if (!this.isMobileDevice) {
-                    this.setTippy(elem.id, 'Full Screen', 'top-end');
-                    this.setTippy(ts.id, 'Snapshot', 'top-end');
-                    this.setTippy(sf.id, 'Send file', 'top-end');
-                    this.setTippy(sm.id, 'Send message', 'top-end');
-                    this.setTippy(sy.id, 'Send youTube', 'top-end');
-                    this.setTippy(cm.id, 'Hide', 'top-end');
-                    this.setTippy(au.id, 'Mute', 'top-end');
-                    this.setTippy(ko.id, 'Eject', 'top-end');
+                    this.setTippy(elem.id, 'Полный экран', 'top-end');
+                    this.setTippy(ts.id, 'Скриншот', 'top-end');
+                    this.setTippy(sf.id, 'Отправить файл', 'top-end');
+                    this.setTippy(sm.id, 'Отправить сообщение', 'top-end');
+                    this.setTippy(sy.id, 'Отправить ссылку youTube', 'top-end');
+                    this.setTippy(cm.id, 'Скрыть', 'top-end');
+                    this.setTippy(au.id, 'Выключить звук', 'top-end');
+                    this.setTippy(ko.id, 'Удалить из конференции', 'top-end');
                 }
                 break;
             case mediaType.audio:
