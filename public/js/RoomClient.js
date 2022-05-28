@@ -2710,22 +2710,22 @@ class RoomClient {
             case 'mute':
             case 'hide':
                 let muteHideConfirmed = false;
-                let whoMuteHide = data.broadcast ? 'everyone' : 'current participant';
+                let whoMuteHide = data.broadcast ? 'everyone' : 'текущего участника';
                 Swal.fire({
                     background: swalBackground,
                     position: 'center',
                     imageUrl: action == 'mute' ? image.mute : image.hide,
                     title:
                         action == 'mute'
-                            ? 'Mute ' + whoMuteHide + ' excpect yourself?'
-                            : 'Hide ' + whoMuteHide + ' except yourself?',
+                            ? 'Отключить звук ' + whoMuteHide + '?'
+                            : 'Скрыть ' + whoMuteHide + '?',
                     text:
                         action == 'mute'
-                            ? "Once muted, you won't be able to unmute them, but they can unmute themselves at any time."
-                            : "Once hided, you won't be able to unhide them, but they can unhide themselves at any time.",
+                            ? "После отключения  звука текущего участника вы не сможете включить его, но он может включить звук сам в любое время."
+                            : "После сокрытия  текущего участника , вы не сможете его вернуть, но он может сам вернуться  в любое время.",
                     showDenyButton: true,
-                    confirmButtonText: `Yes`,
-                    denyButtonText: `No`,
+                    confirmButtonText: `Да`,
+                    denyButtonText: `Нет`,
                     showClass: {
                         popup: 'animate__animated animate__fadeInDown',
                     },
