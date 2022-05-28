@@ -405,7 +405,7 @@ async function shareRoom(useNavigator = false) {
     if (navigator.share && useNavigator) {
         try {
             await navigator.share({ url: RoomURL });
-            userLog('info', 'Room Shared successfully', 'top-end');
+            userLog('info', 'Доступ предоставлен', 'top-end');
         } catch (err) {
             share();
         }
