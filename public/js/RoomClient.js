@@ -1697,9 +1697,9 @@ class RoomClient {
             position: 'center',
             imageUrl: image.message,
             input: 'text',
-            inputPlaceholder: '💬 Enter your message...',
+            inputPlaceholder: '💬 Введите сообщение...',
             showCancelButton: true,
-            confirmButtonText: `Send`,
+            confirmButtonText: `Отправить`,
             showClass: {
                 popup: 'animate__animated animate__fadeInDown',
             },
