@@ -9,7 +9,7 @@ const swalImageUrl = '../images/pricing-illustration.svg';
 
 const url = {
     ipLookup: 'https://extreme-ip-lookup.com/json/?key=demo2',
-    survey: 'https://bond.mephi.ru/newroom',
+    survey: 'http://mirotalk.cybergateway.ru:3010/newroom',
 };
 
 const _PEER = {
