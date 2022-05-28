@@ -831,8 +831,8 @@ class RoomClient {
         handleAspectRatio();
         console.log('[addProducer] Video-element-count', this.videoMediaContainer.childElementCount);
         if (!this.isMobileDevice) {
-            this.setTippy(elem.id, 'Full Screen', 'top-end');
-            this.setTippy(ts.id, 'Snapshot', 'top-end');
+            this.setTippy(elem.id, 'Полный экран', 'top-end');
+            this.setTippy(ts.id, 'Скриншот', 'top-end');
             this.setTippy(au.id, 'Audio status', 'top-end');
         }
         return elem;
