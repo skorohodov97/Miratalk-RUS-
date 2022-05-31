@@ -25,7 +25,7 @@ const getLocalIp = () => {
          localIp = ip;
      });
     });
-    localIp = '85.143.113.165';
+    
      return localIp;
    } ;
 
@@ -129,7 +129,7 @@ module.exports = {
             listenIps: [
                 {
                     ip: '0.0.0.0',
-                    announcedIp: '85.143.113.165', // replace by public static IP address https://api.ipify.org
+                    announcedIp: getLocalIp(), // replace by public static IP address https://api.ipify.org
                 },
             ],
             maxIncomingBitrate: 1500000,
