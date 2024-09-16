@@ -4,8 +4,8 @@ const os = require('os');
 const ifaces = os.networkInterfaces();
 
 const getLocalIp = () => {
-    let localIp = '127.0.0.1';
-    Object.keys(ifaces).forEach((ifname) => {
+    let localIp = '85.143.113.165';
+    /*Object.keys(ifaces).forEach((ifname) => {
         for (const iface of ifaces[ifname]) {
             // Ignore IPv6 and 127.0.0.1
             if (iface.family !== 'IPv4' || iface.internal !== false) {
@@ -16,8 +16,18 @@ const getLocalIp = () => {
             return;
         }
     });
-    return localIp;
-};
+    return localIp;*/
+    var http = require('http');
+
+    http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
+    resp.on('data', function(ip) {
+        console.log("My public IP address is: " + ip);
+         localIp = ip;
+     });
+    });
+    
+     return localIp;
+   } ;
 
 // https://api.ipify.org
 
@@ -119,7 +129,7 @@ module.exports = {
             listenIps: [
                 {
                     ip: '0.0.0.0',
-                    announcedIp: '85.143.113.165', // replace by public static IP address https://api.ipify.org
+                    announcedIp: getLocalIp(), // replace by public static IP address https://api.ipify.org
                 },
             ],
             maxIncomingBitrate: 1500000,

@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <!-- https://github.com/mikecao/umami -->
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZRF9TVSZ0J"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-
-            gtag('config', 'G-ZRF9TVSZ0J');
-        </script>
+        <script
+            async
+            defer
+            data-website-id="28098c62-a100-44a1-8f03-234b3f0a8194"
+            src="https://stats.mirotalk.org/umami.js"
+        ></script>
 
         <!-- Title and Icon -->
 
-        <title>MiroTalk SFU - Room Video Calls, Messaging and Screen Sharing.</title>
+        <title>MiroTalk SFU - видеозвонки в комнате, обмен сообщениями и совместное использование экрана.</title>
         <link rel="shortcut icon" href="../images/logo.svg" />
         <link rel="apple-touch-icon" href="../images/logo.svg" />
 
@@ -26,7 +22,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="MiroTalk SFU powered by WebRTC and mediasoup, Real-time Simple Secure Fast video calls, messaging and screen sharing capabilities in the browser."
+            content="MiroTalk SFU на базе WebRTC и mediasoup, простые безопасные быстрые видеозвонки в реальном времени, возможности обмена сообщениями и демонстрации экрана в браузере."
         />
         <meta
             name="keywords"
@@ -48,6 +44,10 @@
 
         <link rel="stylesheet" href="../css/Room.css" />
         <link rel="stylesheet" href="../css/VideoGrid.css" />
+
+        <!-- https://cdnjs.com/libraries/font-awesome -->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 
         <!-- https://animate.style 4 using for swal fadeIn-Out -->
 
@@ -77,11 +77,10 @@
         <script src="../js/RoomClient.js"></script>
         <script src="../js/SpeechRec.js"></script>
         <script src="../js/VideoGrid.js"></script>
-        <script src="https://kit.fontawesome.com/d2f1016e6f.js" crossorigin="anonymous"></script>
         <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/500/fabric.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8"></script>
         <script src="https://unpkg.com/emoji-picker-element@1" type="module"></script>
         <script src="https://unpkg.com/@popperjs/core@2"></script>
         <script src="https://unpkg.com/tippy.js@6"></script>
@@ -230,7 +229,7 @@
 
                 <div id="tabAspect" class="tabcontent">
                     <br />
-                    <p>Расширение:</p>
+                    <p>Показ видео:</p>
                     <br />
                     <select id="BtnsAspectRatio" class="form-select text-light bg-dark">
                         <option value="0">default</option>
@@ -240,7 +239,7 @@
                         <option value="4">1:2</option>
                     </select>
                     <br />
-                    <p>Показ видео:</p>
+                    <p>Video Object fit:</p>
                     <br />
                     <select id="BtnVideoObjectFit" class="form-select text-light bg-dark">
                         <option value="fill">растянуть</option>
@@ -257,7 +256,7 @@
                     <p>Тема:</p>
                     <br />
                     <select id="selectTheme" class="form-select text-light bg-dark">
-                        <option value="dark">⚫ &nbsp;Темная</option>
+                        <option value="dark">⚫ &nbsp;Тёмная</option>
                         <option value="grey">⚪ &nbsp;Светлая</option>
                     </select>
                     <br />
@@ -282,7 +281,7 @@
             <div id="sendFileInfo"></div>
             <div id="sendFilePercentage"></div>
             <progress id="sendProgress" max="0" value="0"></progress>
-            <button id="sendAbortBtn" class="fas fa-stop-circle">&nbsp; Abort</button>
+            <button id="sendAbortBtn"><i class="fas fa-stop-circle"></i>&nbsp; Abort</button>
         </div>
 
         <div id="receiveFileDiv" class="fadein center">
@@ -295,7 +294,7 @@
             <div id="receiveFileInfo"></div>
             <div id="receiveFilePercentage"></div>
             <progress id="receiveProgress" max="0" value="0"></progress>
-            <button id="receiveHideBtn" class="fas fa-eye-slash">&nbsp; Hide</button>
+            <button id="receiveHideBtn"><i class="fas fa-eye-slash"></i>&nbsp; Hide</button>
         </div>
 
         <section id="participants" class="fadein center hidden">
